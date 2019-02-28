@@ -1,0 +1,133 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: yes
+    template: "svm-latex-syllabus.tex"
+
+  
+geometry: margin=1in
+
+title: "USP 597: Regional Economic Analysis"
+author: Jamaal Green
+date: "Spring 2019"
+
+email: "jamgreen@pdx.edu"
+officehours: "W 09:00-11:30 a.m."
+office: "230A Brackett Hall"
+classroom: "CUPA 225"
+classhours: "M 11:00-01:15 p.m."
+
+urlcolor: blue
+
+fontfamily: mathpazo
+fontsize: 11pt
+header-includes:
+   - \linespread{1.05}
+---
+
+# Course Description
+
+Thiscourse offers students an opportunity to learn about and apply tools for analyzing regional economies, as well as, becoming better analysts by applying the skills of data science workflows. The course will combine video lecture, demonstration, on-line lab, and targeted assignments to assist students learning about data concepts, applying available regional data tools, developing regional economic data products, and organizing data projects to maximize their portability and reproducability. 
+
+# Objectives
+
+This two-credit course builds on MURP core courses, especially Planning Methods II (USP 535), and will complement other courses in the MURP economic development pathway (USP 572, Regional economic development, USP 517, Economic development policy, and USP 578, Impact Assessment), by providing students skills important to economic development practitioners and researchers. It is also appropriate for students in other degree programs (eg, MUS, MRED, MPP) or graduate certificate programs (eg, Applied Demography) looking for a focused discussion of regional analysis methods and tools.   
+ 
+There are no course prerequisites, although students are strongly encouraged to have completed a basic or applied statistics course, such as USP 535 (Planning Methods I). It is also quite helpful to have some basic excel skills. In addition to excel, students should have some experience with the statistical programming language, R, or some other scripting language (eg Python). While it is possible to complete this course using only excel, being able to take advantage of scripting will make some projects easier and help with overall project management. For students who do not have experience with R, a subscription to [DataCamp](https://www.datacamp.com/)  will be provided through the course if enrollment exceeds 10 students. Again, experience with R *is not* required for the successful completion of this course.
+ 
+Students will choose a regional economy that they will analyze over the course of the quarter. Each week will build on the previous week by providing students additional data sources and tools for adding an additional layer of understanding of the region’s economy.  They will also build data manipulation, management and visualization skills using excel or R.
+
+# Learning Outcomes
+
+At the completion of the term, students should be able to:
+
+* Locate, analyze, and interpret important sources and concepts of demographic and economic data;   
+
+* Apply tools of demographic and economic analysis, including population pyramids, location quotients, shift share analysis, and cluster analysis;  
+
+* Understand and apply methodologies for conducting Economic Opportunity Analysis as prescribed by the Oregon Statewide Land Use Program.   
+
+* Apply good data project management and visualization practices.  
+
+
+# Requirements
+
+## Required Texts and Readings:
+
+There is no required text. I will provide worksheets and information via the course website. However, there are several good sources of basic information regarding data sources, methods and programming guidance. I recommend the following:
+
+> Quinterno, John. 2014. *Running the Numbers: A Practical Guide to Regional Economic and Social Analysis*. Armonk, NY: M.E.     Sharpe.
+    
+> Wickham, Hadley and Grolemund, Garret. 2017. *R For Data Science*. O'Reilly Media. book website:                       [R4DS](https://r4ds.had.co.nz/)
+    
+
+
+# Method of Evaluation
+
+* Each week, students will complete an assignment that applies the data tools and concepts to their selected region. Students will be graded on each assignment, worth 9 points each.  
+
+* The final ten percent will be based on participation in online conversation forums regarding the material and the assignments, for a total of 100 points as a course grade (see below).  
+	
+* \underline{Late Submission Policy}: Each weekly assignment will be due via email at 11:59 pm on Sunday of the relevant week. For each hour after the deadline, a 0.1 point deduction (from the 10 point total) will be applied, up to a maximum deduction of 5 points. • There is no final exam. 
+
+# Office Hours
+
+* **TBD**
+
+# Course Overview
+
+## Week 1, 04/01-04/05
+
+* Broad overview of data sources (i.e. BLS, Census, BEA, state LMI agencies) and data concpets that are important to doing regional economic analysis
+
+
+
+**FIRST ASSIGNMENT- DUE APRIL 8**- Choose Metro Area for Analysis
+
+## Week 2, 04/08-04/12
+
+* Review of basic demographic concepts (introduced in USP 535): natural increase, net migration, race and ethnicity, fertility and mortality, families and households etc
+
+* Apply demographic analysis tools in relation to economic development, such as population pyramids and projects, and migration analyis.
+
+**SECOND ASSIGNMENT- DUE APRIL 15**- Regional Demographic Analysis
+
+
+# Incomplete Grades
+
+I am very reluctant to assign incomplete grades, and will only do so when circumstances are consistent with PSU’s policy.  Poor planning is not a valid excuse. If you encounter unforeseen circumstances that meet the conditions outlined below, please let me know as soon as possible so we can come to an agreement about how to resolve the incomplete grade.   
+
+The PSU Bulletin States:
+
+> A student may be assigned an "I" grade by an instructor when all of the following criteria apply:
+
+>  * Quality of work in the course up to that point must be C level or above.
+>  * Essential work remains to be done. "Essential" mens that a grade for the course could not be assigned without dorpping        one or more grapde points below the level achievable upon completion of the work
+>  * Reasons for assigning an "I"  must be acceptable to the instructor.  The student does not have the right to demand an         "I".  The circumstances must be unforeseen or be beyond the control of the student.  An instructor is entitled to insist        on appropriate medical or other documentation.  In no case is an "Incomplete" grade given to enable a student to do             additional work to raise a deficient grade. 
+      
+>  A written agreement, signed by both the student and the instructor, should include a statement of the remaining work to be       done to remove the “I” grade, and the date, not to exceed one year from the end of the term of enrollment for the course,       by which work must be completed in order to earn credit toward the degree.  The instructor must specify the highest grade       which may be awarded upon completion; the grade awarded should not exceed the level of achievement attained during the          regular course period.
+      
+# Plaigarism Policy
+
+Plagiarism will not be tolerated.  It is a serious issue and is a violation of the [PSU Student Conduct Code](https://www.pdx.edu/dos/psu-student-code-conduct)	For tips on how to recognize and avoid plagiarism, see the resources available from the [PSU library](https://library.pdx.edu/diy/avoid-plagiarism).   
+
+# Equitable and Safe Learning Environment
+
+As an instructor, one of my responsibilities is to help create a safe learning environment for my students and for the campus as a whole.  We expect a culture of professionalism and mutual respect in our department and class.  You may report any incident of discrimination or discriminatory harassment, including sexual harassment, to either the [Office of Equity and Compliance](https://www.pdx.edu/diversity/office-of-equity-compliance) or the [Office of the Dean of Student Life](https://www.pdx.edu/dos/). 
+
+Please be aware that as a faculty member, I have the responsibility to report any instances of sexual harassment, sexual violence and/or other forms of prohibited discrimination.  If you would rather share information about sexual harassment or sexual violence to a confidential employee who does not have this reporting responsibility, you can find a list of those individuals. For more information about Title IX please complete the required student module Creating a Safe Campus in your D2L. 
+# Diversity and Inclusion
+
+PSU values diversity and inclusion; we are committed to fostering mutual respect and full participation for all students. My goal is to create a learning environment that is equitable, useable, inclusive, and welcoming. If any aspects of instruction or course design result in barriers to your inclusion or learning, please notify me. The Disability Resource Center (DRC) provides reasonable accommodations for students who encounter barriers in the learning environment. If you have, or think you may have, a disability that may affect your work in this class and feel you need accommodations, contact the Disability Resource Center to schedule an appointment and initiate a conversation about reasonable accommodations. The DRC is located in 116 Smith Memorial Student Union, 503-725-4150, [drc@pdx.edu](drc@pdx.edu), [https://www.pdx.edu/drc](https://www.pdx.edu/drc).
+
+* If you already have accommodations, please contact me to make sure that I have received a faculty notification letter and discuss your accommodations. 
+
+* Students who need accommodations for tests and quizzes are expected to schedule their tests to overlap with the time the class is taking the test. 
+
+* Please be aware that the accessible tables or chairs in the room should remain available for students who find that standard classroom seating is not useable. 
+
+* For information about emergency preparedness, please go to the Fire and [Life Safety webpage](https://www.pdx.edu/environmental-health-safety/fire-and-life-safety) for information
+
+      
+      
