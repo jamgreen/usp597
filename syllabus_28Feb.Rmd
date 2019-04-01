@@ -13,10 +13,10 @@ author: Jamaal Green
 date: "Spring 2019"
 
 email: "jamgreen@pdx.edu"
-officehours: "W 09:00-11:30 a.m."
-office: "230A Brackett Hall"
+officehours: "TBD"
+office: ""
 classroom: "CUPA 225"
-classhours: "M 11:00-01:15 p.m."
+classhours: "M 11:00-12:50 p.m."
 
 urlcolor: blue
 
@@ -34,9 +34,9 @@ Thiscourse offers students an opportunity to learn about and apply tools for ana
 
 This two-credit course builds on MURP core courses, especially Planning Methods II (USP 535), and will complement other courses in the MURP economic development pathway (USP 572, Regional economic development, USP 517, Economic development policy, and USP 578, Impact Assessment), by providing students skills important to economic development practitioners and researchers. It is also appropriate for students in other degree programs (eg, MUS, MRED, MPP) or graduate certificate programs (eg, Applied Demography) looking for a focused discussion of regional analysis methods and tools.   
  
-There are no course prerequisites, although students are strongly encouraged to have completed a basic or applied statistics course, such as USP 535 (Planning Methods I). It is also quite helpful to have some basic excel skills. In addition to excel, students should have some experience with the statistical programming language, R, or some other scripting language (eg Python). While it is possible to complete this course using only excel, being able to take advantage of scripting will make some projects easier and help with overall project management. For students who do not have experience with R, a subscription to [DataCamp](https://www.datacamp.com/)  will be provided through the course if enrollment exceeds 10 students. Again, experience with R *is not* required for the successful completion of this course.
+There are no course prerequisites, although students are strongly encouraged to have completed a basic or applied statistics course, such as USP 535 (Planning Methods I). It is also quite helpful to have some basic excel skills. In addition to excel, students should have some experience with the statistical programming language, R, or some other scripting language (eg Python). While it is possible to complete this course using only excel, being able to take advantage of scripting will make some projects easier and help with overall project management. For students who do not have experience with R, a subscription to [DataCamp](https://www.datacamp.com/)  will be provided through the course if enrollment exceeds 10 students. Again, experience with R *is not* required for the successful completion of this course, but will make certain assignments significantly easier.
  
-Students will choose a regional economy that they will analyze over the course of the quarter. Each week will build on the previous week by providing students additional data sources and tools for adding an additional layer of understanding of the region’s economy.  They will also build data manipulation, management and visualization skills using excel or R.
+Students will choose a regional economy that they will analyze over the course of the quarter. Each week will build on the previous week by providing students additional data sources and tools for adding an additional layer of understanding of the regional economy.  They will also build data manipulation, management and visualization skills using excel or R.
 
 # Learning Outcomes
 
@@ -57,46 +57,118 @@ At the completion of the term, students should be able to:
 
 There is no required text. I will provide worksheets and information via the course website. However, there are several good sources of basic information regarding data sources, methods and programming guidance. I recommend the following:
 
+### General Reference
+
 > Quinterno, John. 2014. *Running the Numbers: A Practical Guide to Regional Economic and Social Analysis*. Armonk, NY: M.E.     Sharpe.
     
 > Wickham, Hadley and Grolemund, Garret. 2017. *R For Data Science*. O'Reilly Media. book website:                       [R4DS](https://r4ds.had.co.nz/)
-    
 
+### Data Visualization and Analysis
+
+> Schwabish, Jonathan. 2016. *Better Presentations: A Guide for Scholars, Researchers, and Wonks*. New York: Columbia University Press.
+    
+> Healy, Kieran. 2018. *Data Visualization: A practical introduction*.[https://socviz.co/](https://socviz.co/)
 
 # Method of Evaluation
 
-* Each week, students will complete an assignment that applies the data tools and concepts to their selected region. Students will be graded on each assignment, worth 9 points each.  
+* Each week, students will complete an assignment that applies the data tools and concepts to their selected region. Students will be graded on each assignment, worth 10 points each.  
 
 * The final ten percent will be based on participation in online conversation forums regarding the material and the assignments, for a total of 100 points as a course grade (see below).  
 	
-* \underline{Late Submission Policy}: Each weekly assignment will be due via email at 11:59 pm on Sunday of the relevant week. For each hour after the deadline, a 0.1 point deduction (from the 10 point total) will be applied, up to a maximum deduction of 5 points. • There is no final exam. 
+* \underline{Late Submission Policy}: Each weekly assignment will be due via email at 11:59 pm on Sunday of the relevant week. For each hour after the deadline, a 0.1 point deduction (from the 10 point total) will be applied, up to a maximum deduction of 5 points. There is no final exam. 
 
 # Office Hours
 
-* **TBD**
+Office Hours are to be determined. Right now, the best way to contact me is over email.
+
+Additional course information will be available on the course website here: [https://sites.google.com/pdx.edu/usp-597/home](https://sites.google.com/pdx.edu/usp-597/home)
 
 # Course Overview
 
-## Week 1, 04/01-04/05
+## Week 1, 04/01-04/05 Introduction
 
 * Broad overview of data sources (i.e. BLS, Census, BEA, state LMI agencies) and data concpets that are important to doing regional economic analysis
 
 
 
-**FIRST ASSIGNMENT- DUE APRIL 8**- Choose Metro Area for Analysis
+**ASSIGNMENT DUE APRIL 8**- Choose Metro Area for Analysis
 
-## Week 2, 04/08-04/12
+## Week 2, 04/08-04/12 Regional Demographic Analysis
 
 * Review of basic demographic concepts (introduced in USP 535): natural increase, net migration, race and ethnicity, fertility and mortality, families and households etc
 
 * Apply demographic analysis tools in relation to economic development, such as population pyramids and projects, and migration analyis.
 
-**SECOND ASSIGNMENT- DUE APRIL 15**- Regional Demographic Analysis
+* Reccomended reading
+  - Wilson et al. 2017. *Good Enough Practices in Scientific Computing*. PLoS Comput Biol 13(6): e1005510.[https://doi.org/10.1371/journal.pcbi.1005510](https://doi.org/10.1371/journal.pcbi.1005510)
+  - Broman, Karl W. and Woo, Kara H. 2018. *Data Organization in Spreadsheets*. The American Statistician. 72(1).[DOI: 10.1080/00031305.2017.1375989](10.1080/00031305.2017.1375989)
+
+**ASSIGNMENT DUE APRIL 15**- Regional Demographic Analysis
+
+## Week 3, 04/15-04/19 Analyzing Regional Business Structure
+
+* Review different sources of employment data and their respective pros and cons
+* Create a basic industry employment dataset for your regional economy
+
+**ASSIGNMENT DUE APRIL 22**- Business Structure Analysis
+
+## Week 4, 04/22-04/26 Analyzing Regional Economic Change
+
+* Review the methods of economic base theory and shift-share analysis on the industry employment datasets previously developed.
+
+* Review concepts and indicators of industry specialization and diversification.
+
+**ASSIGNMENT DUE APRIL 28**-Regional Economic Change
+
+## Week 5, 04/29-05/03 Labor Market Analysis Part 1
+
+* Review data sources for understanding how to characterize  the occupational composition of the regional economy, including educational and training requirements, wages and benefits, and income. 
+
+* Develop profile of regional labor market characteristics
+
+**ASSIGNMENT DUE MAY 3**- Labor Market Analysis 1
+
+## Week 6, 05/06-05/10 Labor Market Analysis Part 2
+
+* Review Longitudinal Employer-Household Dynamics Dataset and how it can be used to understand the relationships between where people live and work, as well as, workforce and employer characteristics.
+
+* Learn how to use the Census Bureau's OnTheMap tool.
+
+**ASSIGNMENT DUE MAY 10**- Labor Market Analysis 2
+
+## Week 7, 05/13-05/17 Cluster Analysis
+
+* Review industry cluster definitions and why industry clusters are important to regional economic analysis
+
+* Review process for identifying important industry clusters and their components
+
+* Develop visualizations of clusters that help to clarify agglomerative relationships among companies and industries
+
+**ASSIGNMENT DUE MAY 3**- Cluster Analysis
+
+##  Week 8, 05/20-05/24 Exploring Innovation and Entrenpreneurship
+
+* Explore data sources that describe an economy's entrepreneurship outcomes as well as its innovative environment
+
+*Reading*- [Kauffman Indicators of Early-Stage Entrepreneurship](https://indicators.kauffman.org/)
+
+##  Week 9, 05/27-05/31 Researching Firms and Markets
+
+* Using proprietary databases such as Hoovers, ReferenceUSA and ESRI Business Analyst to identify regionally important establishments
+
+**ASSINGMENT DUE MAY 31**- Firm market research
+
+## Week 10, 06/03-06/07 Economic Opportunities Analysis
+
+* Understand the requirements for Oregon Statewide Planning Goal 9 and use the data and analyses developed in previous weeks to craft a Goal 9 analysis for your region
+
+**ASSINGMENT DUE JUNE 7**- Goal 9 Opportunity Analysis
+
 
 
 # Incomplete Grades
 
-I am very reluctant to assign incomplete grades, and will only do so when circumstances are consistent with PSU’s policy.  Poor planning is not a valid excuse. If you encounter unforeseen circumstances that meet the conditions outlined below, please let me know as soon as possible so we can come to an agreement about how to resolve the incomplete grade.   
+I am very reluctant to assign incomplete grades, and will only do so when circumstances are consistent with PSU's policy.  Poor planning is not a valid excuse. If you encounter unforeseen circumstances that meet the conditions outlined below, please let me know as soon as possible so we can come to an agreement about how to resolve the incomplete grade.   
 
 The PSU Bulletin States:
 
@@ -106,7 +178,7 @@ The PSU Bulletin States:
 >  * Essential work remains to be done. "Essential" mens that a grade for the course could not be assigned without dorpping        one or more grapde points below the level achievable upon completion of the work
 >  * Reasons for assigning an "I"  must be acceptable to the instructor.  The student does not have the right to demand an         "I".  The circumstances must be unforeseen or be beyond the control of the student.  An instructor is entitled to insist        on appropriate medical or other documentation.  In no case is an "Incomplete" grade given to enable a student to do             additional work to raise a deficient grade. 
       
->  A written agreement, signed by both the student and the instructor, should include a statement of the remaining work to be       done to remove the “I” grade, and the date, not to exceed one year from the end of the term of enrollment for the course,       by which work must be completed in order to earn credit toward the degree.  The instructor must specify the highest grade       which may be awarded upon completion; the grade awarded should not exceed the level of achievement attained during the          regular course period.
+>  A written agreement, signed by both the student and the instructor, should include a statement of the remaining work to be done to remove the grade, and the date, not to exceed one year from the end of the term of enrollment for the course,       by which work must be completed in order to earn credit toward the degree.  The instructor must specify the highest grade which may be awarded upon completion; the grade awarded should not exceed the level of achievement attained during the  regular course period.
       
 # Plaigarism Policy
 
