@@ -1,0 +1,99 @@
+---
+title: "Lab 1- Getting Prepared"
+author: "Jamaal Green"
+date: "April 1, 2019"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(dplyr, ggplot2, tidycensus)
+
+```
+
+# Introduction
+
+This first "lab" is to get us all up and running and to double check that we have everything we need.
+
+First, either your lab or personal computer should have the latest versions of [R](https://www.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) installed.
+
+After opening RStudio, go to `File -> New File -> R script`. That will open a new script file in the upper part of RStudio. We will be working from our script and shall save it at the end.
+
+# Prepping for the tidyverse
+
+The "tidyverse" is a related set of packages that have functions specialized to work with "tidy" data. Tidy meaning data where variables are in columns and each row is an observation.
+
+Open up RStudio. In your script area type:
+
+
+```{r intro_script, echo=TRUE, eval=FALSE}
+
+install.packages("tidyverse")
+
+```
+
+This may take a few minutes as there are many tidyverse packages. 
+
+# Census API
+
+While the tidyverse packages are loading we will request our Census API key. API stands for "Application Programming Interface". This will allow us to more easily query census data from one place without having to use a tool like FactFinder or DataFerret. Click this link here to request key: [https://api.census.gov/data/key_signup.html](https://api.census.gov/data/key_signup.html).
+
+It will take a couple of minutes but you should receive a key form Census before too long.
+
+# Tidycensus
+
+Go back to RStudio. Ideally, the tidyverse packages are installed by now. Next we will install the *tidycensus* package. This package offers a set of convenience functions to query the Census and TIGERLine spatial files. 
+
+```{r eval=FALSE}
+
+install.packages("tidycensus")
+
+library(tidycensus)
+library(tidyverse)
+
+census_api_key("YOUR API KEY GOES HERE")
+
+```
+
+
+## Basic tidycensus usage
+
+Alright, now let's use the tidyverse and tidycensus to do a quick check on the total population of Oregon's counties from the ACS. First we're going to get a reference table so we know what variables we can query, then just grab some basic population data and run a quick graph.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#get the data tables
+
+v15 <- load_variables(2017, "acs5", cache = TRUE)
+
+# getting the total population for each county in Oregon
+
+or_pop <- get_acs(geography = "county", variables = "B01001_001", state = "OR", output = "tidy", geometry = FALSE)
+
+```
+
+The `get_acs()` function is the workhorse function here. We won't get into too much detail yet, but for most of our census data queries for things like demographic analysis and some economic data we can use this function almost exclusively. Now let's make a quick graph using the tidyverse package *ggplot2*.
+
+```{r pop_graph, echo=TRUE, message=FALSE, warning=FALSE}
+
+#ggplot works by following the "grammar of graphics" and building plots layer by layer
+
+pop_plot1 <- ggplot(or_pop, aes(x = estimate, y = reorder(NAME, estimate))) +
+  geom_point() + 
+  geom_segment(aes( x = 0, xend = estimate, y = NAME, yend = NAME)) +
+  labs(title = "Oregon Population by County, 2013-2017 ACS") +
+  scale_x_continuous(labels = scales::comma)
+
+
+pop_plot1
+```
+
+# Conclusion
+
+This is just the beginning to starting to understand what doing census data analyis by scripting looks like. Most of you have done similar things before primarily through the browser and excel. I hope you can see what speed up you can get using this approach for our basic queries.
