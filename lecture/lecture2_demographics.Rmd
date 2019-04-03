@@ -1,0 +1,95 @@
+---
+title: "USP 597- Demographics and the Regional Economy"
+author: "Jamaal Green"
+date: "April 2, 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(dplyr, tibble, kableExtra)
+```
+
+# Introduction
+
+## Some motivating questions
+
+- What kinds of demographic data are important for understanding the regional economy?
+
+- Why do we study demography and the economy at the MSA level?
+
+- Highlight some key demographic concepts
+
+- Review sources of demographic data
+
+## Why do we need to examine demographic data?
+
+Population attributes have clear ramifications for one's economy and population are both a reflection of and cause of economic growth or decline. 
+
+How old is your population? How young? How educated? Is population growing or not? How is it growing?
+
+## An Example
+
+[Greater Portland Inc's Economic Development strategy:](https://www.greaterportlandinc.com/assets/documents/GP2020%20CEDS.pdf)
+
+- Focus on workforce composition
+- Public primary and secondary education
+- Workforce concerns
+
+
+# Demographic Concepts
+
+##  Some important questions
+
+> - How many people live here and how is that changing?
+> - Where did they come from?
+> - How old are the people here and where do they work?
+> - What is the education level of our population?
+> - Race/ethnicity
+> - Are people looking for work?
+
+##  Some important concepts
+
+- Counts or "enumeration" vs estimates vs forecasts
+- Households vs persons vs families
+  + *Family*- "a group of two or more people (one of whom is the householder) related by birth, marriage, or adoption and residing together; all such people (including related subfamily members) as considered as members of one family"
+  + *Household*- one or more people who occupy a housing unit
+- Fertility: *Total Fertility Rate* = the average number of children that would be born to a woman in her lifetime. Calculated as the sum of age-specific fertility rates.
+- Mortality Rate: Deaths per adults per unit of time
+- Migration: movement of people from one place to another
+- Population Growth: Births - Deaths + Net Migration
+- Race and ethnicity
+- Census geography
+
+## Demographic data sources
+
+- US Census Bureau
+  + Decennial census for counts
+  + Population estimates program
+  + Population projections
+  + ACS
+  + Small Area Income and Poverty Estimates
+
+## Decennial Census
+
+- Short form
+  + Questions asked of all persons residing in US
+    - Age, gender, race/ethnicity/Hispanic status, household relationship, housing tenure
+    - 100% data products
+- Long Form
+  + Questions asked for  1 out of 6  housing units...approx. 15% of the population  in 2000
+    - Economic, social and housing information
+    - Sample data products
+    
+Note: ACS has largely replaced the long form census. 
+
+## Race/Ethnicity
+
+Be careful. 
+
+- Race is NOT ethnicity. 
+- Hispanics can be members of ANY RACE.
+- Race is a *social category* where meaning has shifted over time and shifts over *regionally*
+  + e.g. in PDX, more Aftican-Americans identify as multi-racial than African-American alone (nearly 10x more) 
+
