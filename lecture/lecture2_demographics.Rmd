@@ -92,4 +92,96 @@ Be careful.
 - Hispanics can be members of ANY RACE.
 - Race is a *social category* where meaning has shifted over time and shifts over *regionally*
   + e.g. in PDX, more Aftican-Americans identify as multi-racial than African-American alone (nearly 10x more) 
+  
+##  American Community Survey
 
+- Ongoing survey collected from about 2.3 million households, or a 1.7% sample
+
+- Aggregated in 1 and 5 year estimates (used to be a three year but was discontinued in 2013)
+
+- Remember...*all ACS data are estimates* and will have error. How do we know if an estimate is reliable?
+
+## How can we tell if the Margin of Error is too high?
+
+The Coefficient of Variation
+
+$$ CV = \frac{(MOE/1.645)}{Estimate} * 100 $$
+
+Rule of thumb: CV < 15% is reliable, 15-30% have caution, >30% unreliable (think stoplight)
+
+## ACS- Content
+
+* Social/Economic
+  - Age, ethnicity, race, sex
+  - Householder relationships, marital status, marital history
+  - Place of birth, ancestry, citizenship
+  - Previous residence
+  - Education, work status, occupation, income, commuting, insurance 
+
+* Housing
+  - Costs, tenure, value
+  - Facilities: number of bathrooms, kitchen, plumbing, year built
+  - Telephone, internet and computer access
+  
+## ACS Population and Comparison Criteria
+
+Population
+
+- Five year samples cover *all* areas. 1 year samples cover those areas with more than *65,000* people. For your MSAs 1 year samples will be fine if you are looking to compare metrics over time.
+
+Comparison
+
+- When comparing samples over time make sure that your time periods *DO NOT OVERLAP*. Less of a concern for 1 year samples but matter for 5 year samples. 
+- *DO NOT* compare estimates from different lengths samples (1 year vs. 5 year)
+- *REMEMBER YOUR MOEs*
+
+## Population Estimates Program
+
+Census estimates population, and importantly for us, the *components* of population change on an annual level. This includes deaths, births and migration numbers
+
+This allows us to see precisely *how* our regions are growing. You can find this data in the PEPANNRES and PEPTCOMP estimates on FactFinder or under the *get_estimates()* function in tidycensus
+
+# Getting 'Good Enough'
+
+##  Why do we care about being 'good enough'?
+
+- Make life easier for the collaborator we care about the most...our future selves (and others, I guess)
+- Make sure our work is replicable nd well documented
+- Ultimately, to make life *easier* for you as the analyst
+
+## Data Management
+
+- Save your raw data and make sure it is backed up
+- Make sure the data is *usable*
+  - Place data in an open format: CSVs are the lingua franca of much data work (JSON, HDF5, XML also)
+- Create understandable variable names (doubly so for census data)
+  - be consistent with the names (snake case, lower case, no spaces or special characters)
+- Make the data "tidy" if it isn't and track what everything you did to process the data (we already have this if we've done this in a script)
+- Less of an issue for census data, but if you will use multiple tables that should be linked add ID variables
+- Look into reputable data sharing sites, if applicable 
+- Write a README file to show what you're doing and plan on doing
+
+## Software
+
+Believe it or not, we are writing software. How can we make it better?
+
+- Comment your code (don't need every line, but it should let us know what your software is doing)
+- Use functions (not something we cover in depth here, but will save your life in the future)
+- Give functions and variables *meaningful* names
+- Make requirements and dependencies explicit
+- Do *NOT* use comments as a way to control program behavior
+- Provide a simple example
+- Look into reputable data sharing sites
+
+## Project Organization
+
+- Put each project in it sown directory...named after that project (R projects give us this naturally)
+- Have a separate docs folder for documents, data folders for raw and processed data and source code in its own folder
+
+![Wilson et al, 2017](images/good_enough_directory.png)
+
+## Sum up
+
+There is clearly much more but we will start with these principles. Making use of RStudio projects gives us a natural organizing point. Try and set up your projects deliberately with the knowledge your work will be viewed by someone else and need to be replicated. 
+
+# Let's Try This Ourselves!
