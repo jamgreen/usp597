@@ -180,6 +180,25 @@ Believe it or not, we are writing software. How can we make it better?
 
 ![Wilson et al, 2017](images/good_enough_directory.png)
 
+# Sharing Data in Spreadsheets
+
+##  Principles { .smaller}
+
+Broman and Woo give us some basic rules to follow to make spreadsheets not dangerous or too much of a hassle:
+
+> - Be consistent (file and variable names, categorical codes, missing values etc)
+> - YYYY-MM-DD or separate into separate columns (DATES WILL END YOU IF YOU ARE CARELESS)
+> - Fill all cells (NA is your friend)
+> - Make it a rectangle (think data frame in R, don't have column or row spanning categories, make it a variable)
+> - Create a data dictionary
+> - DO NOT MODIFY THE RAW DATA FILE! DO NOT MODIFY THE RAW DATA FILE!
+> - Font coloring or highlighting is fine for presentations, not for analysis
+> - Have good names
+> - BACKUP BACKUP BACKUP
+> - Use data validation for data entry (do we all know what this means?)
+> - Save to plain text (CSVs are your friend. Or at least sometimes ally)
+
+
 ## Sum up
 
 There is clearly much more but we will start with these principles. Making use of RStudio projects gives us a natural organizing point. Try and set up your projects deliberately with the knowledge your work will be viewed by someone else and need to be replicated. 
