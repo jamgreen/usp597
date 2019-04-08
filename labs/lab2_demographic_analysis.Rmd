@@ -1,0 +1,336 @@
+---
+title: "USP 597 Lab/Assignment 2-Demographic Data and Analysis"
+subtitle: "Due April 14, 2019 at 11:59pm"
+author: "Jamaal Green"
+date: "`r Sys.Date()`"
+output: tint::tintPdf
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(tint, kableExtra, tidycensus, tidyverse, janitor)
+
+# invalidate cache when the package version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tint'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Introduction
+
+In this lab we will be making a basic demographic profile of our regions in order to better understand the importance of demographic trends for regional economies. In doing so we will apply some foundational demographic analysis tools such as population pyramids, basic population projections and migration analysis. Additionally, we will get more familiar with *tidycensus* and some of the workhorse *tidyverse* packages- *dplyr* and *ggplot2*.
+
+# Goals
+
+We will develop a brief demographic profile that will cover the following areas:
+
+- How many people live in your region and how has that changed in the last five years?
+- What are the determinants of that population change? Natural increase or decrease? Migration?
+- What is the age profile of the region?
+- What is the racial/ethnic profile?
+- Why are these characteristics important?
+
+For this lab I'll be using the Baltimore, MD Metro area, but feel free to use your project MSA.
+
+# Population Estimates
+
+
+##  Getting the data
+
+We'll be using the *get_estimates()* function from *tidycensus* to get the population estimates for our metro area. In case you have not yet done so here's how we can load in our packages:
+
+```
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(janitor, tidycensus, tidyverse)
+
+```
+
+The Census population estimates API does not allow for direct querying of MSAs so we will have to collect the county level data and pull out the counties in our MSAs. The counties for the Baltimore MSA are:
+
+- Anne Arundel County
+- Baltimore County
+- Carroll County
+- Harford County
+- Howard County
+- Queen Anne's County
+- Baltimore City
+
+Note that Baltimore city is separate from Baltimore county, but Baltimore city is included the county table. We will collect and start to prep the population and components tables.
+
+```{r getting_estimates, echo=TRUE, message=FALSE, warning=FALSE}
+
+#get estimates
+
+md_counties_pop <- get_estimates(geography = "county", product = "population", 
+                             time_series = TRUE, output = "tidy", state = "md")
+
+md_counties_comp <-  get_estimates(geography = "county", product = "components", 
+                             time_series = TRUE, output = "tidy", state = "md")
+
+#change our columns to lower case for simplicity 
+#and consistencyand filter out the DENSITY variable
+
+md_counties_pop <- clean_names(md_counties_pop, case = "snake")
+md_counties_comp <- clean_names(md_counties_comp, case = "snake")
+
+
+md_counties_pop <- md_counties_pop %>% filter(variable == "POP")
+
+#make a new column with just the county and city names 
+#using str_remove() 
+#from string (a tidyverse package) 
+#and we'll remove any whitespace
+
+md_counties_pop <- md_counties_pop %>% 
+  mutate(name_short = str_remove(name, 
+        pattern = "County, Maryland| city, Maryland"))
+
+md_counties_pop <- md_counties_pop %>% 
+  mutate(name_short = str_trim(name_short, 
+        side = "both"))
+
+
+md_counties_comp <- md_counties_comp %>% 
+  mutate(name_short = str_remove(name, 
+        pattern = "County, Maryland| city, Maryland"))
+
+md_counties_comp <- md_counties_comp %>% 
+  mutate(name_short = str_trim(name_short, side = "both"))
+
+
+#make a vector of our counties so we can filter on them
+#we will use str_detect() from the stringr package
+#(a tidyverse package) to match
+#our county names and subset on them
+
+msa_counties <- c("Baltimore", "Anne Arundel", "Carroll", 
+                  "Harford", "Howard", "Queen Anne's")
+
+md_counties_pop <- md_counties_pop %>%
+  filter(name_short %in% msa_counties)
+
+md_counties_comp <- md_counties_comp %>%
+  filter(name_short %in% msa_counties)
+
+
+
+```
+
+Our basic tables are set up. We can modify the date column to give month/year or just year, but for simplicity's sake, let's just keep them as integers for the next couple of steps. 
+
+
+##  Plotting our population estimates
+
+
+Now, we will create a  line graph of the change in population for our metro area over time. Note, the first thing we have to do is to collapse our different counties into one value. We can do this using *dplyr's* `group_by()` function.
+
+```{r msa_pop_change_line, fig.cap="Baltimore-Towson MSA Pop. Change"}
+
+msa_pop <- md_counties_pop %>% 
+  group_by(date) %>% 
+  summarise(pop_total = sum(value))
+
+#start the plot
+
+pop_plot1 <- ggplot(msa_pop, aes(x = date, y = pop_total)) +
+  geom_line() + 
+  theme_minimal() +
+  labs(x = "Date", y = "", 
+       caption = "Source: US Census Population Estimates") +
+  scale_x_continuous(breaks = c("1":"10")) +
+  scale_y_continuous(labels = scales::comma)
+
+pop_plot1
+
+```
+
+## Preparing population components
+
+We've collected our components data, but it is still a bit unwieldy and is made up of the individual counties (and Baltimore city) as opposed to being a single MSA. Our ultimate goal is to make two plots of our components: the first, looking at natural increase versus net migration; and second, domestic vs international migration.
+
+First, let's create two new tables with our components of choice.
+
+```{r msa_pop_components, echo=TRUE, message=FALSE, warning=FALSE}
+
+natural_increase <- md_counties_comp  %>% 
+  filter(variable == "NATURALINC" | variable == "NETMIG")
+
+
+migration <- md_counties_comp %>% 
+  filter(variable == "DOMESTICMIG"| variable == "INTERNATIONALMIG")
+
+
+```
+
+We have our tables. Now let's add everything up to the MSA level. Remember, we used *group_by()*. We'll do the same thing here, but what's different?
+
+```{r pop_components_grouped, echo=TRUE, message=FALSE, warning=FALSE}
+
+natural_increase <- natural_increase %>% 
+  group_by(period, variable) %>% 
+  summarise(components = sum(value))
+
+migration <- migration %>% 
+  group_by(period, variable) %>% 
+  summarise(components = sum(value))
+
+```
+
+Alright, we've got our new tables...let's plot! We'll start with stacked bar charts. What are some alternative ways we could visualize this?
+
+```{r nat_increase_plot, echo=TRUE, message=FALSE, warning=FALSE, fig.cap="Net Migration/Natural Increase comparison\n for Baltimore MSA, 2010-2017"}
+
+nat_increase_plot <- ggplot(natural_increase, aes(x = period, y = components)) +
+  geom_bar(stat = "identity", position = "stack", 
+           aes(group = variable, fill = variable)) +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  labs(x = "Date", y = "", 
+       caption = "Source: US Census Population Estimates, 2010-2017") +
+  geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = c("1":"10")) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_discrete(name = "Pop. Components", 
+                      breaks = c("NETMIG", "NATURALINC"),
+                      labels = c("Net Migration", "Natural Increase"))
+
+nat_increase_plot
+```
+
+Now our migration chart.
+
+```{r migration_chart, echo=TRUE, message=FALSE, warning=FALSE, fig.cap="Domestic vs. International Migration comparison\n for Baltimore MSA, 2010-2017"}
+
+migration_plot <- ggplot(migration, aes(x = period, y = components)) +
+  geom_bar(stat = "identity", position = "stack", 
+           aes(group = variable, fill = variable)) +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  labs(x = "Date", y = "", 
+       caption = "Source: US Census Population Estimates, 2010-2017") +
+  geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = c("1":"10")) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_discrete(name = "Pop. Components", 
+                      breaks = c("DOMESTICMIG", "INTERNATIONALMIG"),
+                      labels = c("Domestic", "International"))
+
+
+```
+
+# Population Pyramid
+
+Our next goal is to make a population pyramid. We've seen this kind of figure often in our work. Generally, age pyramids are used to show the distribution of ages of two populations. In this example we see the age distribution of Oregon compared to the US, as a whole.
+
+
+```{r pyramid_margin, echo=FALSE, message=FALSE, warning=FALSE, out.width="80%"}
+
+pyramid <- list.files(path = "images", pattern = "agestructure", full.names = TRUE)
+
+knitr::include_graphics(pyramid)
+
+```
+
+We will make a similar figure for our MSAs. While we could pull this data from *get_estimates()* we shall use the ACS age by sex variables. We shart with absolute numbers and then percentage shares. We cannot get MSA data for 2017. Note, preparing the data for the population pyramid comes mainly from [Kyle Walker's (the creator and maintainer of tidycensus) blog](https://walkerke.github.io/2017/10/geofaceted-pyramids/). Many thanks to Prof. Walker!
+
+## Prepping our data
+
+```{r pyramid_prep}
+
+var_tables <- load_variables(year = 2016, dataset = "acs5", cache = TRUE)
+
+sex_by_age <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",
+                      table = "B01001", year = 2016,survey = "acs5" ,state = "md")
+
+sex_by_age <- clean_names(sex_by_age, case = "snake")
+
+sex_by_age <- sex_by_age %>% 
+  filter(grepl(pattern = "Baltimore", x = name))
+
+#create a new total column for calculating percentages later
+#we can just manually input for this example
+#and we'll drop the total variables for simplicity in plotting
+
+sex_by_age$tot_pop <- 2780873
+
+sex_by_age <- sex_by_age %>% 
+  filter(variable != "B01001_001", variable != "B01001_002", 
+           variable != "B01001_026")
+
+#let's set our age and sex variables with informative names
+
+agegroups <- c("0-4", "5-9", "10-14", "15-19", "15-19", "20-24", "20-24", 
+               "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", 
+               "55-59", "60-64", "60-64", "65-69", "65-69", "70-74", "75-79", 
+               "80-84", "85+")
+
+agesex <- c(paste("Male", agegroups), 
+            paste("Female", agegroups))
+
+#add this agesex column to our dataframe
+#do you see what this call is doing?
+
+sex_by_age <- sex_by_age %>% 
+  mutate(age_sex_groups = rep(agesex, length(unique(name))))
+
+#let's calculate percent shares now since we know we will use them
+
+sex_by_age <- sex_by_age %>% 
+  mutate(age_sex_percent = estimate/tot_pop)
+
+#let's make final table
+#first select our columns of interest
+
+sex_by_age2 <- sex_by_age %>% 
+  select(estimate, age_sex_groups, age_sex_percent)
+
+#now we're going to split our age_sex_groups column using 
+#tidyr separate()
+
+sex_by_age2 <- sex_by_age2 %>% 
+  separate(age_sex_groups, into = c("sex", "age"), sep = " ") %>% 
+  mutate(age = factor(age, levels = unique(age)),
+         percent = ifelse(sex == "Female", age_sex_percent, -age_sex_percent))
+```
+
+## Plotting our pyramid
+
+Okay...that was a bit of work, but now we can plot!
+
+```{r pyramid_plot, fig.cap="Demographic Structure, Baltimore MSA, 2016"}
+
+#let's get our labels set up 
+
+xlabs <- c("0-4", "5-9", "10-14", "15-19", "15-19", 
+           "20-24", "20-24", "20-24", "25-29", "30-34", 
+           "35-39", "40-44", "45-49", "50-54", "55-59",
+           "60-64", "60-64", "65-69", "65-69", "70-74", 
+           "75-79", "80-84", "85+")
+
+ggplot(sex_by_age2, aes(x = age, y = percent, fill = sex)) +
+  geom_bar(stat = "identity", width = 1) +
+  scale_y_continuous(breaks = c(-.04, 0, .04), 
+                     labels = c("-4%", "0%", "4%")) +
+  coord_flip() +
+  theme_minimal() +
+  scale_x_discrete(labels = xlabs) +
+  theme(strip.text.x = element_text(size = 6)) +
+  labs(x = "", y = "", fill = "", 
+    caption = "Source: American Community Survey,\n 
+    2012-2016 using tidycensus")
+
+```
+
+Alright...that was a good bit of work, but we've now got a population pyramid for our MSA in 2016.
+
+# The rest of the assignment
+
+The rest of this lab/assignment is on you. These are the following additional plots I need:
+
+- *Two* charts of the racial/ethnic make up of your MSA
+- A stacked bar chart of *educational attainment* for the total population older than 25 or 25-64
+- *Finally*, write a memo of your demographic profile for your metro including the plots from the lab and the ones for the assignment
