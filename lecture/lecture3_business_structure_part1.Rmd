@@ -198,3 +198,74 @@ kable(naics, booktabs = TRUE) %>%
 
 ```
 
+## Industry Coding
+
+The NAICS codes are hierarchical so the more digits a code has the more specific the industry. As with everything, the more detail we want, the less likely we are to find available data. Six-digit NAICS employment numbers are hard to find even for many large MSAs.
+
+## Industry Data Sources
+
+```{r industry_data_sources, echo=FALSE, message=FALSE, warning=FALSE}
+
+ind_data_source <- tibble::tribble(
+                                                    ~Program,                ~Source,
+                                  "County Business Patterns",        "Establishment",
+                                      "ACS/Decennial Census",            "Household",
+                                           "Economic Census",        "Establishment",
+  "Local Employment Dynamics/\nQuarterly Workforce Indicators", "Establishment/Worker",
+                  "Quarterly Census of Employment\n and Wages",        "Establishment",
+                             "Current Employment Statistics",        "Establishment",
+                      "Regional Economic Information System",        "Establishment"
+  )
+
+
+kable(ind_data_source, booktabs = TRUE) %>% 
+  kable_styling()
+
+```
+
+## Industry Data Sources (cont.)
+
+```{r industry_data_advatnages, echo=FALSE, message=FALSE, warning=FALSE}
+
+data_source_benefits <- tibble::tribble(
+                                                    ~Program,                                                                      ~Best.For,
+                                  "County Business Patterns", "Downloading data for large number of metros, including by establishment size",
+                                      "ACS/Decennial Census",                                     "Combining industry with demographic info",
+                                           "Economic Census",                    "Combining with data such as value-added and output levels",
+  "Local Employment Dynamics/Quarterly Workforce Indicators",                                                   "Detailed industry analysis",
+                  "Quarterly Census of Employment and Wages",                     "Completeness, accurate, and timely (ish) industrial data",
+                             "Current Employment Statistics",                                                                  "Very timely",
+                      "Regional Economic Information System",                         "Consistent time series for broad industry categories"
+  )
+
+kable(data_source_benefits, booktabs = TRUE) %>% 
+  kable_styling()
+
+
+
+```
+
+## Industry Data Sources (cont.)
+
+```{r industry_data_disadvantage, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+disadvantages <- tibble::tribble(
+                                                    ~Program,                                                          ~Limitations,
+                                  "County Business Patterns",                    "Private Employment only; non-disclosure an issue",
+                                      "ACS/Decennial Census",                                             "Lack of industry detail",
+                                           "Economic Census",             "Not as timely (every 5 years), non-disclosure a problem",
+  "Local Employment Dynamics/Quarterly Workforce Indicators", "(until recently) hard to access time series data, lack of US totals",
+                  "Quarterly Census of Employment and Wages",                                       "Major non-disclosure problems",
+                             "Current Employment Statistics",                              "Lack of geographic and industry detail",
+                      "Regional Economic Information System",                                             "Lack of industry detail"
+  )
+
+kable(disadvantages, booktabs = TRUE) %>% 
+  kable_styling()
+
+
+
+```
+
+##  Other Sources
