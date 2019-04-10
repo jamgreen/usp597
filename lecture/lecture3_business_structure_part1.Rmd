@@ -269,3 +269,14 @@ kable(disadvantages, booktabs = TRUE) %>%
 ```
 
 ##  Other Sources
+
+State Labor Market Information (LMI) offices carry many BLS data sources for the state. May not be able to get unprocessed data, but sometimes a good place to start.
+
+## Some other notes { .columns-2}
+
+- When possible, remember to measure at similar points in the business cycle
+  - Peak to peak
+  - Trough to trough
+
+
+![](images/fred_biz_cycle.png)
