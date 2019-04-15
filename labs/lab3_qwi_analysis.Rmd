@@ -1,0 +1,226 @@
+---
+title: "Lab 3- Working with Industry Data"
+subtitle: "USP 597- Regional Economic Analysis"
+author: "Jamaal Green"
+date: "`r Sys.Date()`"
+output: pdf_document
+
+---
+
+```{r setup, include=FALSE}
+library(tint)
+# invalidate cache when the package version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tint'))
+options(htmltools.dir.version = FALSE)
+```
+
+In this lab we will download and work with data from the Bureau of Labor Statistics Quarterly Census of Employment and Wages. QCEW data provide  quarterly employment and payroll information at a variety of different sub-national geographic scales.
+
+1.  Downloading the data 
+
+   We will pull quarterly data from 2007 and 2016.Go to Census Local Emplyment DYnamics Extraction  Tool site: [https://ledextract.ces.census.gov/](https://ledextract.ces.census.gov/) and select the state your metro area is in (if it crosses multiple states you will have to do this multiple times).
+
+ Under "Geography Type" choose "Micro/Metropolitan Areas" and your metro area in the next panel (uncheck the state for now, we won't be using the totals).
+
+Click "Continue to Firm Characterstics" in the bottom right corner. Under "Firm Characteristics" we will select "NAICS 3-digit subsectors" under Industry Detail Level. We will use everything else so click the "Check All" button to include all industries and uncheck the tota boxl. Finally, click the "Worker Characteristics" button in the bottom right corner
+
+ For worker characteristics we want all the total worker characteristics so simply click the "Continue to indicators" button in the bottom right.
+ 
+We want total employment and payroll indicators. So, click "EmptTotal" under the Employment tab and unclick the employment at the beginning of quarter box. Next, click on the "Earnings" tab and click "Payroll". Finally, click to "Continue to Quarters". Click all four quarters for 2007 and 2016 and click the "Continue to Summary and Export" button in the bottom right.
+
+Finally, click the "Include labels" box. If you wish to have your results emailed, then add your email address after clicking the "Email Results" box and click the "Submit Request" button. Otherwise you can download your datatables directly from the webpage.
+
+
+You should shortly receive an email with multiple links from Census. Download both the csv and metdata files and move them to the proper folder in your project directory.
+
+For the national file we will repeat pretty much everything we just did, but be sure to select "United States" on the geography level tab of the "Geography section" and click "Check All" under areas and uncheck the "00 National" option.
+
+2.  Calculating Annual Employment and Payroll
+
+Our first goal is to get annual average employment and payroll. If you have not done so, unzip your csv. Import your csv as a dataframe using your package of choice (whether it's readr's read_csv(), base R's read.csv() or some other package), and, finally, clean your column names using the janitor package if they have any weird formatting to them.
+
+Our next steps are for the *MSA* table we downloaded.
+  
+```
+  if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(tidyverse, here, janitor, data.table)
+
+qwi_msa <- read_csv(here::here("data/qwi_ef4853a388634fa1952da0173e9fedca.csv"))
+
+qwi <- clean_names(qwi_msa, case = "snake")
+```
+
+If we want **annual** averages for employment payroll what functions would we want to use?
+  
+```
+qwi_annual <- qwi_msa %>% 
+  group_by(year, industry_label_value) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE), 
+            avg_payroll = mean(payroll, na.rm = TRUE))
+            
+```
+
+What is the call above doing? Do you understand the logic here?
+
+
+```{r qwi_import, echo=FALSE, message=FALSE, warning=FALSE}
+
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(tidyverse, here, janitor, kableExtra, data.table)
+
+qwi_msa <- read_csv(here::here("data/qwi/regional/qwi_1606b0c37755477fa298005285c91c19.csv"))
+
+qwi_msa <- clean_names(qwi_msa, case = "snake")
+
+qwi_annual <- qwi_msa %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE))
+
+
+```
+
+
+3.  Calculate Fastest Growing Industries
+
+So, now we want to calculate employment growth between 2007 and 2016. But our data is currently *long* format and does not easily allow us to calculate employment change for values in the same column. One way to approach this is to make our data *wider* by separating the year column into two columns. We will use the *dcast.data.table()* command from the data.table package. 
+
+In order to make this work we will have to convert our qwi dataframe to a data.table object within our *dcast.data.table()* call. Note that *dcast.data.table()* uses a formula type interface to name the variables we want to transform. In this case we tell data.table to take the avg_emp and avg_payroll variables and spread them out by metro area and year.
+  
+```
+
+qwi_annual_wide <- dcast.data.table(setDT(qwi_annual), industry_label_value ~ year, 
+                                    value.var = c("avg_emp", "avg_pay"))
+  
+
+qwi_annual_wide <- qwi_annual_wide %>% 
+  mutate(emp_growth = (avg_emp_2016 - avg_emp_2007)/avg_emp_2007,
+         pay_growth = (avg_pay_2016 - avg_pay_2007)/avg_pay_2007)
+
+```
+  
+```{r reshaped_qwi, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+
+
+qwi_tot_wide <- dcast.data.table(setDT(qwi_annual), industry_label_value ~ year, 
+                                 value.var = c("avg_emp", "avg_pay"))
+
+kable(head(qwi_tot_wide), caption = "Our 'Wide' QWI Figures", booktabs = TRUE) %>% 
+  kable_styling(latex_options =  c("striped", "scale_down"))
+
+```
+
+Now that we have average employment and payroll for each year in separate columns we can calculate the percentage share in a straightforward fashion.
+
+What function can we use in calculating a new column?
+  
+```
+qwi_tot_wide <- qwi_tot_wide %>% 
+  mutate(emp_growth = (avg_emp_2016 - avg_emp_2007)/avg_emp_2007,
+         payroll_growth = (avg_payroll_2016 - avg_payroll_2007)/avg_payroll_2007)
+```
+  
+```{r fastest_growing, message=FALSE, warning=FALSE, include=FALSE}
+
+qwi_annual_wide <- dcast.data.table(setDT(qwi_annual), industry_label_value ~ year, 
+                                    value.var = c("avg_emp", "avg_pay"))
+  
+
+qwi_annual_wide <- qwi_annual_wide %>% 
+  mutate(emp_growth = (avg_emp_2016 - avg_emp_2007)/avg_emp_2007,
+         pay_growth = (avg_pay_2016 - avg_pay_2007)/avg_pay_2007)
+
+```
+
+
+The next steps are for the national QWI file we downloaded earlier. The steps remain largely the same except for calculating the employment at the beginning. You need to first calculate average employment, as we did, but at the *STATE* level and the sum up employment from the states. This is because if you attempt to average direcly from the individual industries you divide over the wrong denominator. 
+
+A thought example- say we wanted to measure fracking employment. We know North Dakota may have an average of 10,000 fracking jobs over the course of the year, but a state like Hawaii has 0. If you average those numbers you get 5000 jobs, but that's clearly incorrect if we want to get an idea of the average *total* number of jobs for the whole country. Remember the average is the average for the *time period* not the geography. I won't belabor the point, just remember to average at the state level first and then sum up.
+
+```
+ qwi_national <- read_csv(here::here("data/qwi/national/qwi_393277d5d7e74a4d867b1a82cb4c9366.csv"))
+
+qwi_nat <- qwi_nat %>% clean_names(case = "snake")
+
+qwi_nat_annual <- qwi_nat %>% 
+  group_by(industry_label_value, geography_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = sum(avg_emp, na.rm = TRUE),
+            avg_pay = sum(avg_pay, na.rm = TRUE))
+```
+
+Note that in the *group_by()* call I include the geography label (state name) along with the industry and yer so we get the average employment for an industry by year, by state. Next, I ungroup the dataframe so I run the *group_by()* again, but this time I sum only on the industry and year value so we get the final sum of state employment. The final table, then, gives us average industrial employment by year for the nation, as a whole.
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+qwi_national <- read_csv(here::here("data/qwi/national/qwi_393277d5d7e74a4d867b1a82cb4c9366.csv"))
+
+qwi_national <- qwi_national %>% clean_names(case = "snake")
+
+qwi_nat_annual <- qwi_national %>% 
+  group_by(industry_label_value, geography_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = sum(avg_emp, na.rm = TRUE),
+            avg_pay = sum(avg_pay, na.rm = TRUE))
+```
+
+After calculating our totals now we need to reshape our table to wide format like we did before. 
+
+Once you finish reshaping your national table you will join your two tables so you can calculate  location quotients.
+ 
+  
+```
+qwi_nat_annual_wide <- dcast.data.table(setDT(qwi_nat_annual), industry_label_value ~ year, 
+                                        value.var = c("avg_emp", "avg_pay"))
+```
+             
+Now that we have our two wide tables we need to calculate our location quotients. To keep flexiblity we'll calculate our location quotients in our original MSA table. In order to do that we will have to join our national and MSA tables. We will use the *dplyr* join functions for this. Note the use of the suffix command in the inner_join function. That allows me to place "_msa" and "_national" on the join columns so I can keep track of which columns came from which table.
+
+Finally, we calculate our location quotients. Remember LQs are a measure of relative concentration. When calculating it we are taking a ratio of ratios. The ratio of industry employment in your region choice to the total employment in your region. That value is then divided by the ratio of industry employment for your reference region (in this case the national level) to the total employment of your reference region.
+
+$$\frac{EMP_{it}/\Sigma EMP_t}{EMP_i/\Sigma EMP} $$
+
+```
+
+qwi_annual_wide <- qwi_annual_wide %>% 
+  inner_join(qwi_nat_annual_wide, by = "industry_label_value",
+             suffix = c("_msa", "_national"))
+
+qwi_annual_wide <- qwi_annual_wide %>% 
+mutate(lq_2007 = (avg_emp_2007_msa/sum(avg_emp_2007_msa, na.rm = TRUE))/(avg_emp_2007_national/sum(avg_emp_2007_national)))
+
+```
+  
+```{r location_quotient, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+
+qwi_nat_annual_wide <- dcast.data.table(setDT(qwi_nat_annual), industry_label_value ~ year, 
+                                        value.var = c("avg_emp", "avg_pay"))
+
+qwi_annual_wide <- qwi_annual_wide %>% 
+  inner_join(qwi_nat_annual_wide, by = "industry_label_value",
+             suffix = c("_msa", "_national"))
+
+qwi_annual_wide <- qwi_annual_wide %>% 
+  mutate(lq_2007 = (avg_emp_2007_msa/sum(avg_emp_2007_msa, na.rm = TRUE))/(avg_emp_2007_national/sum(avg_emp_2007_national)),
+         lq_2016 = (avg_emp_2016_msa/sum(avg_emp_2016_msa, na.rm = TRUE))/(avg_emp_2016_national/sum(avg_emp_2016_national)))
+
+kable(qwi_annual_wide %>% select(1:3, 8:9, 12:13) %>% head(), "latex", caption = "MSA Location Quotients for 2007 and 2016", booktabs = TRUE) %>% 
+  kable_styling(latex_options = c("striped", "scale_down"))
+
+```
+
+
+4.  Next steps and Assignment
+
+You have done most of what you need for the assignment. Here is what I want for the final deliverable.
+  
+  + 1 table with the 5 fastest growing and 5 most declining industries in your region
+  + 1 table with the 5 most concentrated industries in your region and the five least concentrated
+  + 2 graphs of your industry data. The choice of topic and graph type is up to you
+  + *EXTRA CREDIT*- go back to the LED website and get your regional data but now also pull male and female data. Make a graph showing the sex breakdown of your 5 fastes growing and 5 most declining industries. Does your region's economic restructuring have a gendered nature to it?

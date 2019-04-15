@@ -1,5 +1,5 @@
 ---
-title: "USP 597- Regional Business Structure"
+title: "USP 597- Regional Business\n Structure"
 author: "Jamaal Green"
 date: "April 8, 2019"
 output: ioslides_presentation
@@ -31,29 +31,30 @@ Two broad issues in business structure:
 
 ## Businesses/Employment by Size and Type
 
-- Employment by _firm_ (enterprise) size:
-  - [https://www.census.gov/programs-surveys/susb.html](https://www.census.gov/programs-surveys/susb.html)
-  - [https://www.sba.gov/advocacy/firm-size-data](https://www.sba.gov/advocacy/firm-size-data)
-- Employment by _establishment_ size
-  - County business patterns: [https://www.census.gov/programs-surveys/cbp/data.html](https://www.census.gov/programs-surveys/cbp/data.html)
-  - BLS QCEW: [https://www.bls.gov/cew/](https://www.bls.gov/cew/)
+* Employment by _firm_ (enterprise) size:
+    + [https://www.census.gov/programs-surveys/susb.html](https://www.census.gov/programs-surveys/susb.html)
+    + [https://www.sba.gov/advocacy/firm-size-data](https://www.sba.gov/advocacy/firm-size-data)
+  
+* Employment by _establishment_ size
+    + County business patterns: [https://www.census.gov/programs-surveys/cbp/data.html](https://www.census.gov/programs-surveys/cbp/data.html)
+   + BLS QCEW: [https://www.bls.gov/cew/](https://www.bls.gov/cew/)
   
 ##  Firm vs. Establishment
 
-- Firms are decisionmaking units
-- Establishments are physical locations
-- Multi-establishment firms:
-  - retailers and chain restaurants
-  - branch plant facilities
-  - specialized units- R&D, sales etc
-- Different establishments within firms may be coded directly, especially if in different locations
+* Firms are decisionmaking units
+* Establishments are physical locations
+* Multi-establishment firms:
+    + retailers and chain restaurants
+    + branch plant facilities
+    + specialized units+ R&D, sales etc
+* Different establishments within firms may be coded directly, especially if in different locations
 
-##  Business by Firm Size, 2016
+##  Business by Firm Size, 2016 { .smaller}
 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
 
 if(!require(pacman)){install.packages("pacman"); library(pacman)}
-p_load(readr, data.table, janitor, kableExtra)
+p_load(readr, data.table, janitor, here, kableExtra)
 
 susb <- fread("https://www2.census.gov/programs-surveys/susb/tables/2016/us_state_6digitnaics_2016.txt?#", header = TRUE, na.strings = "--", showProgress = TRUE)
 
@@ -71,7 +72,7 @@ us_tot_shares <- us_total[, `:=` (firm_share = firm/5954684,
 
 us_tot_shares <- us_tot_shares[, list(statedscr, entrsizedscr, firm, estb, empl_n, firm_share, estab_share, emp_share)]
 
-fwrite(us_tot_shares, "lecture/presentation_tables/us_estab_sizes.csv")
+fwrite(us_tot_shares, here::here("lecture/presentation_tables/us_estab_sizes.csv"))
 
 
 #apparently the metro file does not include US total, so
@@ -92,7 +93,7 @@ baltimore <- baltimore[, `:=` (firm_share = firmtot/53843,
 
 baltimore <- baltimore[, list(msadscr, entrsizedscr, firmtot, estbtot, empltot_n, firm_share, estab_share, emp_share)]
 
-fwrite(baltimore, "lecture/presentation_tables/baltimore_estab_sizes.csv")
+fwrite(baltimore, here::here("lecture/presentation_tables/baltimore_estab_sizes.csv"))
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -119,7 +120,7 @@ bmore_estab <- tibble::tribble(
   )
 
 kable(bmore_estab, booktabs = TRUE) %>% 
-  kable_styling() %>% 
+  kable_styling(bootstrap_options = "striped", font_size = 8) %>% 
   add_header_above(c(" " = 1, "Baltimore-Towson MSA" = 3, "United States" = 3)) %>% 
   pack_rows(index = c(" " = 9, "Percentage Shares" = 8))
 
@@ -132,37 +133,40 @@ rm(us_total)
 ```
 
 
-##  Business/Employment by Size and Type
+##  Business/Employment by Size and Type {.smaller}
 
-Employment by _firm_ size:
-- [https://www.census.gov/programs-surveys/susb.html](https://www.census.gov/programs-surveys/susb.html)
-- [https://www.sba.gov/advocacy/firm-size-data](https://www.sba.gov/advocacy/firm-size-data)
+Employmnt by _firm_ size:
+
+* [https://www.census.gov/programs-surveys/susb.html](https://www.census.gov/programs-surveys/susb.html)
+* [https://www.sba.gov/advocacy/firm-size-data](https://www.sba.gov/advocacy/firm-size-data)
 
 Employment by _establishment_ size:
-- County Business Patterns: [https://www.census.gov/programs-surveys/cbp/data.html](https://www.census.gov/programs-surveys/cbp/data.html)
-- QCEW: [https://www.bls.gov/cew/](https://www.bls.gov/cew/)
+
+* County Business Patterns: [https://www.census.gov/programs-surveys/cbp/data.html](https://www.census.gov/programs-surveys/cbp/data.html)
+* QCEW: [https://www.bls.gov/cew/](https://www.bls.gov/cew/)
 
 Employment by _firm type_:
-- Census Bureau Nonemployer Statistics: [https://www.census.gov/programs-surveys/nonemployer-statistics/data.html](https://www.census.gov/programs-surveys/nonemployer-statistics/data.html)
-- NETS: [http://youreconomy.org/](http://youreconomy.org/)
+
+* Census Bureau Nonemployer Statistics: [https://www.census.gov/programs-surveys/nonemployer-statistics/data.html](https://www.census.gov/programs-surveys/nonemployer-statistics/data.html)
+* NETS: [http://youreconomy.org/](http://youreconomy.org/)
 
 # Industrial Structure
 
 ##  Industry Employment
 
-- The most common basis for analyzing regional economic structure
-- Industry- what a particular worker (or establishment) makes/selss
-  - Goods production 
-    - Primary - agriculture, mining
-    - Secondary - Manufacturing
-  - Service Sector
-- Generally, all workers in a particular "establishment" are generally counted in the same industry, regardless of what they do (occupation)
+* The most common basis for analyzing regional economic structure
+* Industry what a particular worker (or establishment) makes/selss
+  + Goods production 
+    * Primary - agriculture, mining
+    * Secondary - Manufacturing
+  + Service Sector
+* Generally, all workers in a particular "establishment" are generally counted in the same industry, regardless of what they do (occupation)
 
 ## Industry Coding
 
 Standard Industrial Classification (SIC)- dominant system through the 1990s, replaced by NAICS in the early 90s. For historical industrial work, use SICs. But NAICS are now standard for North America (US, Canada, Mexico).
 
-## NAICS 2-Digit Codes
+## NAICS 2-Digit Codes { .smaller}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -192,7 +196,7 @@ naics <- tibble::tribble(
 
 
 kable(naics, booktabs = TRUE) %>% 
-  kable_styling() 
+  kable_styling(bootstrap_options = "striped", font_size = 10) 
 
 
 
@@ -219,11 +223,11 @@ ind_data_source <- tibble::tribble(
 
 
 kable(ind_data_source, booktabs = TRUE) %>% 
-  kable_styling()
+  kable_styling(bootstrap_options = "striped")
 
 ```
 
-## Industry Data Sources (cont.)
+## Industry Data Sources (cont.) { .smaller}
 
 ```{r industry_data_advatnages, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -239,13 +243,13 @@ data_source_benefits <- tibble::tribble(
   )
 
 kable(data_source_benefits, booktabs = TRUE) %>% 
-  kable_styling()
+  kable_styling(bootstrap_options = "striped", font_size = 8)
 
 
 
 ```
 
-## Industry Data Sources (cont.)
+## Industry Data Sources (cont.) { .smaller}
 
 ```{r industry_data_disadvantage, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -275,8 +279,63 @@ State Labor Market Information (LMI) offices carry many BLS data sources for the
 ## Some other notes { .columns-2}
 
 - When possible, remember to measure at similar points in the business cycle
-  - Peak to peak
-  - Trough to trough
+  + Peak to peak
+  + Trough to trough
 
 
 ![](images/fred_biz_cycle.png)
+
+
+## Some Industrial Measures...Locatoin Quotient
+
+A measure of **relative** concentration. Industries with higher location quotients can be a signal of competitive advantage.
+
+$$ \frac{EMP_{it}/\Sigma{EMP_{it}}}{EMP_{ir}/\Sigma{EMP_{ir}}}$$
+Where we take the ratio of employment in industry **i** in our region **t** , divided the total employment of region **t** and then divide quotient by the employment in industry **i** in our reference region **r** (often the nation)
+
+# Data Visualization
+
+## So what?
+
+A major part of your job is the communication of information. The *one* advantage planners have over other fields should be the ability to absorb large amounts of information, summarize said information and offer analysis (remember your Krumholz)
+
+Therefore effective communication is key
+
+## Effective Data Viz Is Not Easy...But Also Isn't Hard
+
+> - Beware the defaults (even ggplot)
+> - Avoid clutter (do you need those tickmarks? all those grid lines?)
+> - Emphasize the information you want your audience to notice
+
+## Aspects to think about...Color
+
+Incredibly abused. Easy way to improve a graphic is to use a different color scheme than default.
+
+Some tools:
+
+* [ColorBrewer](http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3)
+  + Used widely by cartographers but good starting point
+  
+* [ColorSchemeDesigner](https://colorschemedesigner.com/csd-3.5/)
+  + Much more in-depth. If familiar with other design software can be quite useful
+  
+## Aspects to think about...Fonts
+
+Again, changing from defaults can make a big change but be careful. There are many free fonts that are nice
+
+Check Google Fonts and other Open Source fonts (I'm a fan of [Roboto](https://fonts.google.com/specimen/Roboto))
+
+Remember, fonts should be clear/legible. Large enough to read without overwhelming your graphic.
+
+## Aspects to think about...Layout
+
+InDesign, Illustrator are workhorses of graphic design. But have you heard of [Inkscape](https://inkscape.org/)? An open source graphic design alternative.
+
+Also [GIMP](https://www.gimp.org/), an open source image manipulation program for when you need that extra touch. 
+
+## Research!
+
+There are so many sources for dataviz now. Seek out pretty graphics, see if you can find blog posts explaining how they made it. 
+
+What are some of your favorite visualizations?
+
