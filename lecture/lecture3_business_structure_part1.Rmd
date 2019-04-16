@@ -120,7 +120,7 @@ bmore_estab <- tibble::tribble(
   )
 
 kable(bmore_estab, booktabs = TRUE) %>% 
-  kable_styling(bootstrap_options = "striped", font_size = 8) %>% 
+  kable_styling(bootstrap_options = c("condensed"), font_size = 2) %>% 
   add_header_above(c(" " = 1, "Baltimore-Towson MSA" = 3, "United States" = 3)) %>% 
   pack_rows(index = c(" " = 9, "Percentage Shares" = 8))
 
@@ -157,8 +157,8 @@ Employment by _firm type_:
 * The most common basis for analyzing regional economic structure
 * Industry what a particular worker (or establishment) makes/selss
   + Goods production 
-    * Primary - agriculture, mining
-    * Secondary - Manufacturing
+    * Primary: Agriculture, mining
+    * Secondary:  Manufacturing
   + Service Sector
 * Generally, all workers in a particular "establishment" are generally counted in the same industry, regardless of what they do (occupation)
 
@@ -196,7 +196,7 @@ naics <- tibble::tribble(
 
 
 kable(naics, booktabs = TRUE) %>% 
-  kable_styling(bootstrap_options = "striped", font_size = 10) 
+  kable_styling(bootstrap_options = c("condensed"), font_size = 6) 
 
 
 
@@ -223,7 +223,7 @@ ind_data_source <- tibble::tribble(
 
 
 kable(ind_data_source, booktabs = TRUE) %>% 
-  kable_styling(bootstrap_options = "striped")
+  kable_styling(bootstrap_options = c("condensed"))
 
 ```
 
@@ -243,7 +243,7 @@ data_source_benefits <- tibble::tribble(
   )
 
 kable(data_source_benefits, booktabs = TRUE) %>% 
-  kable_styling(bootstrap_options = "striped", font_size = 8)
+  kable_styling(bootstrap_options = c("condensed"), font_size = 8)
 
 
 
@@ -266,7 +266,7 @@ disadvantages <- tibble::tribble(
   )
 
 kable(disadvantages, booktabs = TRUE) %>% 
-  kable_styling()
+  kable_styling(bootstrap_options = c("condensed"))
 
 
 
@@ -276,7 +276,7 @@ kable(disadvantages, booktabs = TRUE) %>%
 
 State Labor Market Information (LMI) offices carry many BLS data sources for the state. May not be able to get unprocessed data, but sometimes a good place to start.
 
-## Some other notes { .columns-2}
+## Some other notes { .columns-2 .smaller}
 
 - When possible, remember to measure at similar points in the business cycle
   + Peak to peak
@@ -286,12 +286,12 @@ State Labor Market Information (LMI) offices carry many BLS data sources for the
 ![](images/fred_biz_cycle.png)
 
 
-## Some Industrial Measures...Locatoin Quotient
+## Some Industrial Measures...Location Quotient
 
 A measure of **relative** concentration. Industries with higher location quotients can be a signal of competitive advantage.
 
-$$ \frac{EMP_{it}/\Sigma{EMP_{it}}}{EMP_{ir}/\Sigma{EMP_{ir}}}$$
-Where we take the ratio of employment in industry **i** in our region **t** , divided the total employment of region **t** and then divide quotient by the employment in industry **i** in our reference region **r** (often the nation)
+$$ \frac{EMP_{it}/\Sigma{EMP_{it}}}{EMP_{ir}/\Sigma{EMP_{r}}}$$
+Where we take the ratio of employment in industry **i** in our region **t** , divided the total employment of region **t** and then divide quotient by the employment in industry **i** in our reference region **r** (often the nation) divided by the total employment in region **r**
 
 # Data Visualization
 
@@ -314,10 +314,10 @@ Incredibly abused. Easy way to improve a graphic is to use a different color sch
 Some tools:
 
 * [ColorBrewer](http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3)
-  + Used widely by cartographers but good starting point
+    +   Used widely by cartographers but good starting point
   
 * [ColorSchemeDesigner](https://colorschemedesigner.com/csd-3.5/)
-  + Much more in-depth. If familiar with other design software can be quite useful
+    +   Much more in-depth. If familiar with other design software can be quite useful
   
 ## Aspects to think about...Fonts
 
