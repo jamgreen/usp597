@@ -9,7 +9,7 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 
 if(!require(pacman)){install.packages("pacman"); library(pacman)}
-p_load(tidyverse, kableExtra)
+p_load(tidyverse, kableExtra, janitor, data.table, here)
 ```
 
 ## Today's Class
@@ -66,19 +66,21 @@ Table: Example Coefficient of Specialization table
   + industries within region
   
 $$ H = \sum_{i = 1}^{N} s_{i}^2 $$
+
 ## HHI Example (as borrowed from Wikipedia) { .smaller}
 
 Assume we have 10 firms producing some good in a region. We shall assume that 3 of the firms produce 90% of the output and the remaining 10% is evenly distributed across the other firms.
 
 In our second case let's assume one firm produces 90%.
 
-\begin{footnotesize}
+Competitive (ish) market:<font size = "2.5"> $$ (0.30^2 + 0.30^2 + 0.30^2) + (0.014^2 + 0.014^2 + 0.014^2 + 0.014^2 + 
+0.014^2 + 0.014^2 + 0.014^2) = 0.271 (27.1\%)$$</font>
 
-Competitive (ish) market: $ (0.30^2 + 0.30^2 + 0.30^2) + (0.014^2 + 0.014^2 + 0.014^2 + 0.014^2 + 0.014^2 + 0.014^2 + 0.014^2) = 0.271 (27.1%)$
+## HHI Exmaple, Highly Concentrated Industry
 
-Non-Competitive Market: $ (.9^2) + 9 * 0.11^2 = 0.9189 (91.9%) $
 
-\end{footnotesize}
+Non-Competitive Market: $$ (.9^2) + 9 * 0.11^2 = 0.9189 (91.9\%) $$
+
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Herfindahl_index)
 
@@ -98,7 +100,9 @@ Ellison and Glaeser applied the idea to regional economies using the _sum of squ
 
 $$ EG = \frac{\Sigma (s_i - x_i)^2 - (1 - \Sigma_i x_i^2)H}{(1 - \Sigma_i x_i^2)(1 - H)} $$
 s = industry employment share for subregion **i**
+
 x = total employment share for subregion **i**
+
 H = the industry Herfindahl-Hirshman Index
 
 [Cassey and Smith](http://cru.cahe.wsu.edu/CEPublications/TB05/TB05.pdf) offer an example of how this works
@@ -124,10 +128,179 @@ H = the industry Herfindahl-Hirshman Index
 
 National growth- share of regional job growth attributable to growth of the national economy
 
-$$ NG_ir^t = E_{ir}^t-1 * (\frac{E_{US}^t}{E_{US}^{t-1}} - 1) $$
+$$ NG_{ir}^t = E_{ir}^t-1 * (\frac{E_{US}^t}{E_{US}^{t-1}} - 1) $$
 
 t = current time period 
+
 t-1 = base year
+
 i = specific industry 
+
 r = specific region
 
+## Shift-Share Analysis cont.
+
+Industry Mix- How much growth can be attributed to the region's mix of industries?
+
+$$ IM_{ir}^t = E_{ir}^{t-1} * [(\frac{E_{iUS}^t}{E_{iUS}^{t-1}}) - (\frac{E_{US}^t}{E_{US}^{t-1}})] $$
+Where:
+
+t = current time period
+
+t-1 = base year
+
+i = specific industry
+
+r = specific region
+
+## Shift-Share Analysis (cont.)
+
+Regional (Differential) Shift
+- How many jobs are created/not created as a result of the region's competitiveness?
+- Identifies region's fastest growing industries compared to the nation
+- Can help us form *better questions*
+
+$$ RS_{ir}^t = E_{ir}^{t-1} * [(\frac{E_{ir}^t}{E_{ir}^{t-1}}) - (\frac{E_{iUS}^t}{E_{iUS}^{t-1}})] $$
+
+
+Where:
+
+t = current time period
+t-1 = base year
+i = specific industry
+r = specific region
+
+## LQ vs. Shift-Share
+
+* LQs can tell us what industries comprise a larger share of economy today
+  + Where are competitive/concentrated? What does our "portfolio" of industries look like?
+
+* Shift-share is a more *dynamic* measure that let's us understand the components of economic change in our region
+  + Is there some particularly unique aspect to your region that explains your industrial growth?
+  
+## Calculating Shift Shares
+
+_Actual Growth_ = _National Growth_ + _Industry Mix_ + _Regional Shift_
+
+$$ \Delta E_i = NG_i + IM_i + RS_i $$
+
+Accounting relationship: total employment change can be decomposed into these components
+
+**Caution** - For both LQ and shift-share, results can be very different for 3 and 4-digit NAICS levels
+
+## Growing Industries Shift-Share Baltimore MSA, 2007 and 2016
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+qwi_msa <- read_csv(here::here("data/qwi/regional/qwi_1606b0c37755477fa298005285c91c19.csv"))
+
+qwi_msa <- clean_names(qwi_msa, case = "snake")
+
+qwi_annual <- qwi_msa %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE))
+
+qwi_tot_wide <- dcast.data.table(setDT(qwi_annual), industry_label_value ~ year, 
+                                 value.var = c("avg_emp", "avg_pay"))
+
+qwi_tot_wide <- qwi_tot_wide %>% 
+  mutate(emp_growth = (avg_emp_2016 - avg_emp_2007)/avg_emp_2007,
+         pay_growth = (avg_pay_2016 - avg_pay_2007)/avg_pay_2007)
+
+qwi_fastest <- qwi_tot_wide %>% 
+  filter(!is.nan(avg_emp_2007) & avg_emp_2007 >= 500) %>% 
+  arrange(desc(emp_growth))
+
+qwi_fastest <- qwi_fastest %>% 
+  slice(1:10, 73:82)
+
+
+#bring in the national data and join to the fastest df
+
+qwi_national <- read_csv(here::here("data/qwi/national/qwi_393277d5d7e74a4d867b1a82cb4c9366.csv"))
+
+qwi_national <- qwi_national %>% clean_names(case = "snake")
+
+qwi_nat_annual <- qwi_national %>% 
+  group_by(industry_label_value, geography_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = sum(avg_emp, na.rm = TRUE),
+            avg_pay = sum(avg_pay, na.rm = TRUE))
+
+qwi_nat_annual_wide <- dcast.data.table(setDT(qwi_nat_annual), industry_label_value ~ year, 
+                                        value.var = c("avg_emp", "avg_pay"))
+
+qwi_fastest <- qwi_fastest %>% 
+  inner_join(qwi_nat_annual_wide, by = "industry_label_value",
+             suffix = c("_msa", "_national"))
+
+
+qwi_fastest <- qwi_fastest %>% 
+  select(industry_label_value, contains("emp"))
+
+#create a new categorical variable of the fastest growing and declining vars
+
+qwi_fastest <- qwi_fastest %>% 
+  mutate(growing = if_else(emp_growth >= .16, "growing", "declining"))
+
+#calculate the shift-share
+
+#first calculate total US employment
+
+us_employment_2007 <- sum(qwi_nat_annual_wide$avg_emp_2007)
+us_employment_2016 <- sum(qwi_nat_annual_wide$avg_emp_2016)
+
+#calculate shift-share components
+
+qwi_fastest <- qwi_fastest %>% 
+  mutate(national_growth = avg_emp_2007_msa * ((avg_emp_2016_national/avg_emp_2007_national) - 1),
+         industry_growth = avg_emp_2007_msa * ((avg_emp_2016_national/avg_emp_2007_national) - (us_employment_2016/us_employment_2007)),
+         regional_growth = avg_emp_2007_msa * ((avg_emp_2016_msa/avg_emp_2007_msa) - (avg_emp_2016_national/avg_emp_2007_national)))
+
+# create new variable of shift_share type using melt
+
+shift_share <- melt(qwi_fastest, id.vars = list("industry_label_value", "growing"),
+                    measure.vars = list("national_growth", "industry_growth", "regional_growth"),
+                    value.name = "shift_component")
+
+shift_share$variable <- factor(shift_share$variable, levels = c("national_growth", "industry_growth", "regional_growth"))
+
+# create growing industry component graph
+
+ggplot(shift_share %>% filter(growing == "growing"), aes(x = reorder(industry_label_value,shift_component), 
+                                                         y = shift_component)) +
+  geom_bar(stat = "identity", aes(group = variable, fill = variable), width = .5) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 6),
+        legend.position = "bottom") +
+  scale_y_continuous(labels = scales::comma) +
+  coord_flip() +
+  scale_fill_manual(values = c("#a6cee3", "#1f78b4", "#b2df8a"),
+                    labels = c("National Growth", "Industry Mix", "Regional Share")) +
+  labs(x = "", y = "Employment Change", fill = " ")
+
+```
+
+## Declining Industries by Growth Component, Baltimore MSA, 2007-2016
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+ggplot(shift_share %>% filter(growing == "declining"), aes(x = reorder(industry_label_value,shift_component), 
+                                                         y = shift_component)) +
+  geom_bar(stat = "identity", aes(group = variable, fill = variable), width = .5) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 6),
+        legend.position = "bottom") +
+  scale_y_continuous(labels = scales::comma) +
+  coord_flip() +
+  scale_fill_manual(values = c("#a6cee3", "#1f78b4", "#b2df8a"),
+                    labels = c("National Growth", "Industry Mix", "Regional Share")) +
+  labs(x = "", y = "Employment Change", fill = " ")
+
+
+```
