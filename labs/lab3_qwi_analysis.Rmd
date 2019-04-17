@@ -56,7 +56,7 @@ If we want **annual** averages for employment payroll what functions would we wa
 qwi_annual <- qwi_msa %>% 
   group_by(year, industry_label_value) %>% 
   summarise(avg_emp = mean(emp_total, na.rm = TRUE), 
-            avg_payroll = mean(payroll, na.rm = TRUE))
+            avg_pay = mean(payroll, na.rm = TRUE))
             
 ```
 
@@ -85,7 +85,7 @@ qwi_annual <- qwi_msa %>%
 
 So, now we want to calculate employment growth between 2007 and 2016. But our data is currently *long* format and does not easily allow us to calculate employment change for values in the same column. One way to approach this is to make our data *wider* by separating the year column into two columns. We will use the *dcast.data.table()* command from the data.table package. 
 
-In order to make this work we will have to convert our qwi dataframe to a data.table object within our *dcast.data.table()* call. Note that *dcast.data.table()* uses a formula type interface to name the variables we want to transform. In this case we tell data.table to take the avg_emp and avg_payroll variables and spread them out by metro area and year.
+In order to make this work we will have to convert our qwi dataframe to a data.table object within our *dcast.data.table()* call. Note that *dcast.data.table()* uses a formula type interface to name the variables we want to transform. In this case we tell data.table to take the avg_emp and avg_pay variables and spread them out by metro area and year.
   
 ```
 
@@ -115,18 +115,16 @@ Now that we have average employment and payroll for each year in separate column
 What function can we use in calculating a new column?
   
 ```
-qwi_tot_wide <- qwi_tot_wide %>% 
+
+qwi_annual_wide <- qwi_annual_wide %>% 
   mutate(emp_growth = (avg_emp_2016 - avg_emp_2007)/avg_emp_2007,
-         payroll_growth = (avg_payroll_2016 - avg_payroll_2007)/avg_payroll_2007)
+         payroll_growth = (avg_pay_2016 - avg_pay_2007)/avg_pay_2007)
 ```
   
 ```{r fastest_growing, message=FALSE, warning=FALSE, include=FALSE}
-
-qwi_annual_wide <- dcast.data.table(setDT(qwi_annual), industry_label_value ~ year, 
-                                    value.var = c("avg_emp", "avg_pay"))
   
 
-qwi_annual_wide <- qwi_annual_wide %>% 
+qwi_tot_wide <- qwi_tot_wide %>% 
   mutate(emp_growth = (avg_emp_2016 - avg_emp_2007)/avg_emp_2007,
          pay_growth = (avg_pay_2016 - avg_pay_2007)/avg_pay_2007)
 
@@ -202,15 +200,15 @@ mutate(lq_2007 = (avg_emp_2007_msa/sum(avg_emp_2007_msa, na.rm = TRUE))/(avg_emp
 qwi_nat_annual_wide <- dcast.data.table(setDT(qwi_nat_annual), industry_label_value ~ year, 
                                         value.var = c("avg_emp", "avg_pay"))
 
-qwi_annual_wide <- qwi_annual_wide %>% 
+qwi_tot_wide <- qwi_tot_wide %>% 
   inner_join(qwi_nat_annual_wide, by = "industry_label_value",
              suffix = c("_msa", "_national"))
 
-qwi_annual_wide <- qwi_annual_wide %>% 
+qwi_tot_wide <- qwi_tot_wide %>% 
   mutate(lq_2007 = (avg_emp_2007_msa/sum(avg_emp_2007_msa, na.rm = TRUE))/(avg_emp_2007_national/sum(avg_emp_2007_national)),
          lq_2016 = (avg_emp_2016_msa/sum(avg_emp_2016_msa, na.rm = TRUE))/(avg_emp_2016_national/sum(avg_emp_2016_national)))
 
-kable(qwi_annual_wide %>% select(1:3, 8:9, 12:13) %>% head(), "latex", caption = "MSA Location Quotients for 2007 and 2016", booktabs = TRUE) %>% 
+kable(qwi_tot_wide %>% select(1:3, 8:9, 12:13) %>% head(), "latex", caption = "MSA Location Quotients for 2007 and 2016", booktabs = TRUE) %>% 
   kable_styling(latex_options = c("striped", "scale_down"))
 
 ```

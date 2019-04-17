@@ -97,3 +97,37 @@ Ellison and Glaeser applied the idea to regional economies using the _sum of squ
 ## Ellison and Glaeser Index (EG)
 
 $$ EG = \frac{\Sigma (s_i - x_i)^2 - (1 - \Sigma_i x_i^2)H}{(1 - \Sigma_i x_i^2)(1 - H)} $$
+s = industry employment share for subregion **i**
+x = total employment share for subregion **i**
+H = the industry Herfindahl-Hirshman Index
+
+[Cassey and Smith](http://cru.cahe.wsu.edu/CEPublications/TB05/TB05.pdf) offer an example of how this works
+
+## Analyzing Regional Economic Change
+
+* A critical part of regional economic analysis is making sense of relative performance over time
+* Location quotients can give us one view of this- which industries/occupations are more concentrated over time?
+* More important question: Which sectors of the economy are driving regional growth (or decline)?
+
+# Shift-Share Analysis
+
+## What is Shift-Share?
+
+- A technique that decomposes growth into different components:
+
+> - National Growth- change that would have occured if the industry grew at the rate of the overall national economy
+> - Industry Mix- the share of growth (or decline) due to concentration in partiular industries that are growing faster/slower than the economy as a whole
+>-  Regional Shift- share of growth (or decline) attributable to "local factors"
+
+## Shift-Share Analysis
+
+
+National growth- share of regional job growth attributable to growth of the national economy
+
+$$ NG_ir^t = E_{ir}^t-1 * (\frac{E_{US}^t}{E_{US}^{t-1}} - 1) $$
+
+t = current time period 
+t-1 = base year
+i = specific industry 
+r = specific region
+
