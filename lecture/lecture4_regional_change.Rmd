@@ -43,9 +43,9 @@ Values range from 0 (perfect similarity) to 1 (perfect dissimilarity)
 
 There is also an index of localization that is the **sum** of absolute deviations of an industry across regions relative to overall employment
 
-## Coefficient of Specialization (cont.)
+## Coefficient of Specialization (cont.) { .smaller}
 
-| Ref      | A   | B   | C    |      | A   | B         | C         |           |
+| Ref      | A   | B   | C    |      |     | A         | B         |   c       |
 |----------|-----|-----|------|------|-----|-----------|-----------|-----------|
 | Industry | %   | %   | %    | %    |     | Deviation | Deviation | Deviation |
 | 1        | 0.2 | 0.2 | 0.3  | 0.5  |     | 0         | 0.1       | 0.3       |
