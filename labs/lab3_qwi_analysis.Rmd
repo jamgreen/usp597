@@ -14,7 +14,7 @@ knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tint'))
 options(htmltools.dir.version = FALSE)
 ```
 
-In this lab we will download and work with data from the Bureau of Labor Statistics Quarterly Census of Employment and Wages. QCEW data provide  quarterly employment and payroll information at a variety of different sub-national geographic scales.
+In this lab we will download and work with data from the Census Bureau's Quarterly Workforce Indicators. QWI data provide  quarterly employment, payroll and worker characteristic information at a variety of different sub-national geographic scales.
 
 1.  Downloading the data 
 
