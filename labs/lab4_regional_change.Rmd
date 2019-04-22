@@ -1,0 +1,207 @@
+---
+title: "Lab 4- Regional Change"
+subtitle: "USP 597- Regional Economic Analysis"
+author: "Jamaal Green"
+date: "`r Sys.Date()`"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(tint)
+# invalidate cache when the package version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tint'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Introduction
+
+In this lab we will use the industrial data we downloaded in our last lab to analyze regional specialization and change. 
+
+# Economic Specialization
+
+Return to your scripts, import your industrial employment data for your metro area. We will need the employment numbers and industrial share. There are three measures of economic specialization: the coefficient of specialization; the Herfindahl-Hirschman Index; and Spatial Gini coefficient.
+
+```{r qwi_import, echo=FALSE, message=FALSE, warning=FALSE}
+
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(tidyverse, here, janitor, kableExtra, data.table)
+
+qwi_msa <- read_csv(here::here("data/qwi/regional/qwi_1606b0c37755477fa298005285c91c19.csv"))
+
+qwi_msa <- clean_names(qwi_msa, case = "snake")
+
+qwi_annual <- qwi_msa %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE))
+
+qwi_tot_wide <- dcast.data.table(setDT(qwi_annual), industry_label_value ~ year, 
+                                 value.var = c("avg_emp", "avg_pay"))
+
+
+
+#get national shares
+
+qwi_national <- read_csv(here::here("data/qwi/national/qwi_393277d5d7e74a4d867b1a82cb4c9366.csv"))
+
+qwi_national <- qwi_national %>% clean_names(case = "snake")
+
+qwi_nat_annual <- qwi_national %>% 
+  group_by(industry_label_value, geography_label_value, year) %>% 
+  summarise(avg_emp = mean(emp_total, na.rm = TRUE),
+            avg_pay = mean(payroll, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  group_by(industry_label_value, year) %>% 
+  summarise(avg_emp = sum(avg_emp, na.rm = TRUE),
+            avg_pay = sum(avg_pay, na.rm = TRUE))
+
+#get lqs
+
+qwi_nat_annual_wide <- dcast.data.table(setDT(qwi_nat_annual), industry_label_value ~ year, 
+                                        value.var = c("avg_emp", "avg_pay"))
+
+qwi_tot_wide <- qwi_tot_wide %>% 
+  inner_join(qwi_nat_annual_wide, by = "industry_label_value",
+             suffix = c("_msa", "_national"))
+
+qwi_tot_wide <- qwi_tot_wide %>% 
+  mutate(lq_2007 = (avg_emp_2007_msa/sum(avg_emp_2007_msa, na.rm = TRUE))/(avg_emp_2007_national/sum(avg_emp_2007_national)),
+         lq_2016 = (avg_emp_2016_msa/sum(avg_emp_2016_msa, na.rm = TRUE))/(avg_emp_2016_national/sum(avg_emp_2016_national)))
+
+#get regional and national industry shares
+
+qwi_tot_wide <- qwi_tot_wide %>% 
+  mutate(msa_ind_share_2007 = avg_emp_2007_msa/sum(avg_emp_2007_msa, na.rm = TRUE),
+         msa_ind_share_2016 = avg_emp_2016_msa/sum(avg_emp_2016_msa, na.rm = TRUE),
+         usa_ind_share_2007 = avg_emp_2007_national/sum(avg_emp_2007_national, na.rm = TRUE),
+         usa_ind_share_2016 = avg_emp_2016_national/sum(avg_emp_2016_national, na.rm = TRUE))
+
+
+
+```
+
+##  Coefficient of Specialization
+
+Remember, the COS equation is:
+
+$$ Dis_{AB} = 1/2 * \Sigma \lvert a_i - b_i \rvert $$
+
+We will take the absolute difference between the industry share of employment in our region and the industry share for the nation. 
+
+```
+
+cos_2007 <- .5 * sum(abs(qwi_tot_wide$msa_ind_share_2007 - 
+qwi_tot_wide$usa_ind_share_2007), na.rm = TRUE)
+
+cos_2016 <- .5 *  sum(abs(qwi_tot_wide$msa_ind_share_2016 - 
+qwi_tot_wide$usa_ind_share_2016), na.rm = TRUE)
+
+```
+
+```{r coef_spaecialization, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+cos_2007 <- .5 * sum(abs(qwi_tot_wide$msa_ind_share_2007 - qwi_tot_wide$usa_ind_share_2007), na.rm = TRUE)
+
+cos_2016 <- .5 *  sum(abs(qwi_tot_wide$msa_ind_share_2016 - qwi_tot_wide$usa_ind_share_2016), na.rm = TRUE)
+
+```
+
+## Hirschman-Herfindahl Index
+
+The HHI formula is:
+
+$$ H = \sum_{i = 1}^{N} s_{i}^2 $$
+
+
+The square of the sum of industry shares in our region of interest.
+
+
+```
+hhi_2007 <- sum(qwi_tot_wide$msa_ind_share_2007^2, na.rm = TRUE)
+
+hhi_2016 <- sum(qwi_tot_wide$msa_ind_share_2016^2, na.rm = TRUE)
+
+```
+
+```{r region_hhi, echo=FALSE, message=FALSE, warning=FALSE}
+
+hhi_2007 <- sum(qwi_tot_wide$msa_ind_share_2007^2, na.rm = TRUE)
+
+hhi_2016 <- sum(qwi_tot_wide$msa_ind_share_2016^2, na.rm = TRUE)
+```
+
+##  Spatial Gini Coefficient
+
+The spatial Gini  is similar to the coefficient of specialization except instead of taking the absolute value of the deviations in industry share, we will **square** them. Then we will sum the squared deviations to generate the total Spatial Gini Coefficient.
+
+$$ IP = \sum_{i=1}^i (s_i - \bar{s_i})^2 $$
+
+We *WILL NOT* be calculating the spatial Gini in this lab until I have a clearer understanding of its application.
+
+# Shift-Share Elements: What is responsible for job growth or loss?
+
+We'll use our regional and national employment data some more. You can use your existing dataframe or re-import your tables and join them. We will not need the industry shares, just the total regional and national employment.
+
+First, calculate a new column of the employment change in your industries for your region. Remember the basic shift-share is *accounting* identity, meaning that everything should add up at the end. So we will use the total employment change in our industries as a check on our shift-share calculations.
+
+```
+qwi_tot_wide <- qwi_tot_wide %>% 
+  select(1:9) %>%
+  mutate(emp_change0716 = avg_emp_2016_msa - avg_emp_2007_msa)
+```
+
+Next we will calculate the national growth component:
+
+$$ NG_{ir}^t = E_{ir}^{t-1} * (\frac{E_{US}^t}{E_{US}^{t-1}} - 1) $$
+```
+qwi_tot_wide <- qwi_tot_wide %>% 
+  mutate(nat_growth = avg_emp_2007_msa * 
+  ((sum(avg_emp_2016_national, na.rm = TRUE)/
+  sum(avg_emp_2007_national, na.rm = TRUE)) - 1))
+```
+
+Next the industry mix:
+
+$$ IM_{ir}^t = E_{ir}^{t-1} * [(\frac{E_{iUS}^t}{E_{iUS}^{t-1}}) - (\frac{E_{US}^t}{E_{US}^{t-1}})] $$
+
+
+```
+qwi_tot_wide <- qwi_tot_wide %>% 
+mutate(ind_mix = avg_emp_2007_msa * 
+((avg_emp_2016_national/avg_emp_2007_national) - 
+(sum(avg_emp_2016_national, na.rm = TRUE)/sum(avg_emp_2007_national, na.rm = TRUE))))
+
+```
+
+And now finally our regional mix:
+
+$$ RS_{ir}^t = E_{ir}^{t-1} * [(\frac{E_{ir}^t}{E_{ir}^{t-1}}) - (\frac{E_{iUS}^t}{E_{iUS}^{t-1}})] $$
+```
+qwi_tot_wide <- qwi_tot_wide %>% 
+mutate(reg_shift = avg_emp_2007_msa * 
+((avg_emp_2016_msa/avg_emp_2007_msa) -
+(avg_emp_2016_national/avg_emp_2007_national)))
+
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+qwi_tot_wide <- qwi_tot_wide %>% 
+  select(1:9) %>% mutate(emp_change0716 = avg_emp_2016_msa - avg_emp_2007_msa)
+
+qwi_tot_wide <- qwi_tot_wide %>% 
+  mutate(nat_growth = avg_emp_2007_msa * ((sum(avg_emp_2016_national, na.rm = TRUE)/sum(avg_emp_2007_national, na.rm = TRUE)) - 1)) %>% 
+    mutate(ind_mix = avg_emp_2007_msa * ((avg_emp_2016_national/avg_emp_2007_national) - (sum(avg_emp_2016_national, na.rm = TRUE)/sum(avg_emp_2007_national, na.rm = TRUE)))) %>% 
+  mutate(reg_shift = avg_emp_2007_msa * ((avg_emp_2016_msa/avg_emp_2007_msa) - (avg_emp_2016_national/avg_emp_2007_national)))
+
+
+
+```
+
+Finally, add a new column called "check" and add the national mix, industry mix and regional mix columns and check against your original employment change column.
+
+# Analyzing the Shift-Share Results
+
+Calculate the sum of the separate shift share columns and determine what was primarily responsible for your region's growth. Was it national growth? Some quirk of individual industries or is there something unique to your region?
+
+Finally, write up the results of your lab in a memo and add a clustered bar chart of your shift share results for five industries with the greatest growth and the five with the greatest job losses. If you are ambitious you can also see if you can make a stacked bar chart of this using this post from [Stack Overflow](https://stackoverflow.com/questions/13734368/ggplot2-and-a-stacked-bar-chart-with-negative-values).

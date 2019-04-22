@@ -92,6 +92,12 @@ Variation along the "Lorenz Curve"- cumulative % of incomes
 
 Ellison and Glaeser applied the idea to regional economies using the _sum of squared deviations from the reference region_
 
+$$ IP = \sum_{i=1}^i (s_i - \bar{s_i})^2 $$
+
+$s_i$ = industry *i* share for the analysis region
+$\bar{s_i}$ = industry *i* share for the reference (national) region
+
+
 ## Spatial Gini (cont.)
 
 ![](images/spatial_gini.png)
@@ -128,7 +134,7 @@ H = the industry Herfindahl-Hirshman Index
 
 National growth- share of regional job growth attributable to growth of the national economy
 
-$$ NG_{ir}^t = E_{ir}^t-1 * (\frac{E_{US}^t}{E_{US}^{t-1}} - 1) $$
+$$ NG_{ir}^t = E_{ir}^{t-1} * (\frac{E_{US}^t}{E_{US}^{t-1}} - 1) $$
 
 t = current time period 
 
