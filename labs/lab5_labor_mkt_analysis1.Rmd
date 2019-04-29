@@ -1,0 +1,122 @@
+---
+title: "Lab 5- Labor Market Analysis 1"
+subtitle: "USP 597- Regional Economic Analysis"
+author: "Jamaal Green"
+date: "`r Sys.Date()`"
+output: tint::tintPdf
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tint)
+# invalidate cache when the package version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tint'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Unemployment Rates by race/ethnicity
+
+We will grab "Employment Status" data from the ACS using tidycensus. We are going to use the "acs5/subject" tables. We will be grabbing the unemployment rates by race/ethnicity for MSAs and the nation, as a whole.
+
+```{r educ_attainment_by_race, echo=TRUE, message=FALSE, warning=FALSE}
+if(!require(pacman)){install.packages("pacman"); library(pacman)}
+p_load(tidycensus, dplyr, ggplot2, hrbrthemes)
+
+emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",year = 2017, variables = c("White NH" = "S2301_C04_012",                              "Black NH" = "S2301_C04_013", "Amer. Indian NH" = "S2301_C04_014",                          "Asian NH" = "S2301_C04_015", "Native Hawaiian NH" = "S2301_C04_016",                       "Other NH" = "S2301_C04_017","Two or more NH" = "S2301_C04_018",                            "Hispanic/Latinx" = "S2301_C04_019"))
+
+emp_status_us <- get_acs(geography = "us",year = 2017, 
+variables = c("White NH" = "S2301_C04_012", "Black NH" = "S2301_C04_013", 
+"Amer. Indian NH" = "S2301_C04_014", "Asian NH" = "S2301_C04_015", 
+"Native Hawaiian NH" = "S2301_C04_016", "Other NH" = "S2301_C04_017",
+"Two or more NH" = "S2301_C04_018", "Hispanic/Latinx" = "S2301_C04_019"))
+
+
+```
+
+Next we will filter down to MSA table to our MSA of interest (in this case Baltimore). Then we will use the `bind_rows()` function to combine the national and MSA files. Finally, we will set up the graph of unemployment rates with included error bars.
+
+```{r unemployment_graph, fig.fullwidth = TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+
+bmore_emp <- emp_status %>% 
+  filter(GEOID == "12580") %>% 
+  bind_rows(emp_status_us) 
+
+ggplot(bmore_emp, aes(variable, estimate, fill = NAME)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Race/Ethnicity", y = "") +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) + 
+  geom_errorbar(aes(ymin = estimate - moe, ymax = estimate + moe),  
+                width = .75, position = "dodge") +
+  coord_flip() +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom")
+
+
+
+```
+
+
+# Class of Worker
+
+We will be using the table series S2408: Class of Worker by Sex for the Civilian Employed Population. Again, we'll be collecting this for our MSAs and nation, as a whole. For simplicity's sake we will calculate percentages using the hardcoded totals. 
+
+```{r worker_class, echo=TRUE, message=FALSE, warning=FALSE}
+
+worker_class <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year = 2017)
+
+worker_class <- worker_class %>% 
+  mutate(class_share = estimate/1400048)
+
+worker_class_us <- get_acs(geography = "us", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year =2017)
+
+worker_class_us <- worker_class_us %>% 
+  mutate(class_share = estimate/150599165)
+
+
+```
+
+Next we will bind the dataframes again. But first we will filter our MSA table to pull our MSA of interest, bind the dataframes and then filter out our total rows to make graphing easier. Then I will set the variable column to a factor and set the levels for graphing.
+
+```{r worker_graphs, echo=TRUE, message=FALSE, warning=FALSE}
+
+worker_class_bmore <- worker_class %>% 
+  filter(GEOID == "12580") %>% 
+  bind_rows(worker_class_us) %>% 
+  filter(variable != "Total Emp.")
+
+worker_class_bmore <- worker_class_bmore %>% 
+  mutate(variable = factor(variable, levels = c("Private, for-profit", "Private, not-for-profit", "Local Gov.", "State Gov.", "Federal", "Self Employed")))
+
+```
+
+Finally, let's get our graph up. Note that I do not include the error bars here because I calculate the percentages and the MOEs for the absolute counts.
+
+```{r worker_share_graphics, fig.fullwidth = TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+
+ggplot(worker_class_bmore, aes(variable, class_share, fill = NAME)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Employment Status", y = "") +
+  scale_y_continuous(labels = scales::percent) + 
+  coord_flip() +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom")
+
+
+```
+
+# Occupational Employment and Wages
+
+Navigate to the [BLS OES Database Box](https://www.bls.gov/oes/#databases). Click the one screen data search and select multiple occupations for one geographic area. Choose metropolitan area and select your assignment area. Next, click "All Occupations in this list" and for datatypes we will choose employment, hour and annual mean wage. We will choose the May 2018 release and download the Excel sheet. Open the sheet in Excel and fix the table so your column headers and names are correct and save it as a csv. 
+
+Next, repeat this for the national file. 
+
+Calculate location quotients for your occupational employment figures and divide your MSA occupational average wages by the national wages to see if your regional occupations have  awage premium compared to the national average. 
+
+## Past Occupational Employment
+
+Next, navigate the [BLS tables link](https://www.bls.gov/oes/tables.htm) and download the 2008 Metropolitan and non-metrpolitan table links. The "dl_" tables correspond to different MSAs. Bring them into R and figure which table has your metro. Calculate the change in occupational employment and create a table of the five fastest growing and five most  declining occupations (be sure to drop occupations with less than 500 jobs in your metro).
+
+## Occupational Projections
+
+
