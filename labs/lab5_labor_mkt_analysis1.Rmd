@@ -3,9 +3,7 @@ title: "Lab 5- Labor Market Analysis 1"
 subtitle: "USP 597- Regional Economic Analysis"
 author: "Jamaal Green"
 date: "`r Sys.Date()`"
-output: tint::tintPdf
-bibliography: skeleton.bib
-link-citations: yes
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +21,17 @@ We will grab "Employment Status" data from the ACS using tidycensus. We are goin
 if(!require(pacman)){install.packages("pacman"); library(pacman)}
 p_load(tidycensus, dplyr, ggplot2, hrbrthemes)
 
-emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",year = 2017, variables = c("White NH" = "S2301_C04_012",                              "Black NH" = "S2301_C04_013", "Amer. Indian NH" = "S2301_C04_014",                          "Asian NH" = "S2301_C04_015", "Native Hawaiian NH" = "S2301_C04_016",                       "Other NH" = "S2301_C04_017","Two or more NH" = "S2301_C04_018",                            "Hispanic/Latinx" = "S2301_C04_019"))
+emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",year = 2017, variables = c("White NH" = "S2301_C04_012",                              "Black NH" = "S2301_C04_013", 
+                                                                                        "Amer. Indian NH" = "S2301_C04_014",
+                                                                                       "Asian NH" = "S2301_C04_015", 
+                                                                                       "Native Hawaiian NH" = "S2301_C04_016",                       
+                                                                                       "Other NH" = "S2301_C04_017",
+                                                                                      
+"Two or more NH" = "S2301_C04_018",                            
+"Hispanic/Latinx" = "S2301_C04_019"))
+```
+
+```{r educ_attainment_race2, echo=TRUE, message=FALSE, warning=FALSE}
 
 emp_status_us <- get_acs(geography = "us",year = 2017, 
 variables = c("White NH" = "S2301_C04_012", "Black NH" = "S2301_C04_013", 
@@ -36,7 +44,7 @@ variables = c("White NH" = "S2301_C04_012", "Black NH" = "S2301_C04_013",
 
 Next we will filter down to MSA table to our MSA of interest (in this case Baltimore). Then we will use the `bind_rows()` function to combine the national and MSA files. Finally, we will set up the graph of unemployment rates with included error bars.
 
-```{r unemployment_graph, fig.fullwidth = TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+```{r unemployment_graph,  echo=TRUE, message=FALSE, warning=FALSE}
 
 bmore_emp <- emp_status %>% 
   filter(GEOID == "12580") %>% 
@@ -49,7 +57,7 @@ ggplot(bmore_emp, aes(variable, estimate, fill = NAME)) +
   geom_errorbar(aes(ymin = estimate - moe, ymax = estimate + moe),  
                 width = .75, position = "dodge") +
   coord_flip() +
-  theme_ipsum_rc() +
+  theme_minimal() +
   theme(legend.position = "bottom")
 
 
@@ -63,12 +71,27 @@ We will be using the table series S2408: Class of Worker by Sex for the Civilian
 
 ```{r worker_class, echo=TRUE, message=FALSE, warning=FALSE}
 
-worker_class <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year = 2017)
+worker_class <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area", 
+variables = c("Total Emp." = "S2408_C01_001", 
+              "Private, for-profit" = "S2408_C01_002", 
+              "Private, not-for-profit" = "S2408_C01_005", 
+              "Local Gov." = "S2408_C01_006", 
+              "State Gov." = "S2408_C01_007", 
+              "Federal" = "S2408_C01_008", 
+              "Self Employed" = "S2408_C01_009"), 
+year = 2017)
 
 worker_class <- worker_class %>% 
   mutate(class_share = estimate/1400048)
 
-worker_class_us <- get_acs(geography = "us", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year =2017)
+worker_class_us <- get_acs(geography = "us", 
+variables = c("Total Emp." = "S2408_C01_001", 
+              "Private, for-profit" = "S2408_C01_002", 
+              "Private, not-for-profit" = "S2408_C01_005", 
+              "Local Gov." = "S2408_C01_006", 
+              "State Gov." = "S2408_C01_007", 
+              "Federal" = "S2408_C01_008",
+              "Self Employed" = "S2408_C01_009"), year =2017)
 
 worker_class_us <- worker_class_us %>% 
   mutate(class_share = estimate/150599165)
@@ -92,14 +115,14 @@ worker_class_bmore <- worker_class_bmore %>%
 
 Finally, let's get our graph up. Note that I do not include the error bars here because I calculate the percentages and the MOEs for the absolute counts.
 
-```{r worker_share_graphics, fig.fullwidth = TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+```{r worker_share_graphics,  echo=TRUE, message=FALSE, warning=FALSE}
 
 ggplot(worker_class_bmore, aes(variable, class_share, fill = NAME)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(x = "Employment Status", y = "") +
   scale_y_continuous(labels = scales::percent) + 
   coord_flip() +
-  theme_ipsum_rc() +
+  theme_minimal() +
   theme(legend.position = "bottom")
 
 
@@ -111,7 +134,7 @@ Navigate to the [BLS OES Database Box](https://www.bls.gov/oes/#databases). Clic
 
 Next, repeat this for the national file. 
 
-Calculate location quotients for your occupational employment figures and divide your MSA occupational average wages by the national wages to see if your regional occupations have  awage premium compared to the national average. 
+Calculate location quotients for your occupational employment figures and divide your MSA occupational average wages by the national wages to see if your regional occupations have  a wage premium compared to the national average. 
 
 ## Past Occupational Employment
 
@@ -119,4 +142,18 @@ Next, navigate the [BLS tables link](https://www.bls.gov/oes/tables.htm) and dow
 
 ## Occupational Projections
 
+Navigate to your state's labor market information agency and search for their occupational projections. If your state produces projections at metro level, then find your metro and download those projections. If they do not have metro level projections, then use the state level. 
 
+Next navigate to the BLS employment section at [www.bls.gov/emp/](www.bls.gov/emp/), click the EP Data button and download the employment projections for 2016-2026 by major occupational group.
+
+Create a table depicting the regional and national projections for the major occupational groups. 
+
+# Assignment
+
+Write a memo with what you've already completed in this lab and add the following things:
+
+1.  Create an additional unemployment graph for educational attainment in addition to the unemployment by race graph you've already made.
+2.  Create a graph for "Class of Worker" (the private for-profit, private not-for-profit graph we made), but this time combine all of the government employment into one "Government" category. 
+3.  Present a table with your region's top 10 occupations by employment. In the table include the average wage and location quotient you previously calculated. 
+4.  Create a Cleveland Dot Plot of your region's top 10 occupations by employment
+5. *EXTRA CREDIT* Create a bar chart visualizing the top 10 occupations by employment grouped by educational attainment. 
