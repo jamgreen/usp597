@@ -1,0 +1,157 @@
+---
+title: "USP 597-Regional Labor Market Anlysis 2, Census OnThe Map"
+author: "Jamaal Green"
+date: "May 5, 2019"
+output: 
+  beamer_presentation:
+    theme: "metropolis"
+    fonttheme: "structurebold"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Checking In
+
+1. Any big questions regarding the course thus far?
+2.  Next week is check in and preparing for our final projects. 
+3.  What should we prioritize over the rest of the term?
+  a.  Go deeper into microdata?
+  b.  Focus more on R itself (go over conditionals, iterators, additional packages)
+4.  What remains unclear? Or what can I do better?
+
+# OnTheMap
+
+## What is OnTheMap?
+
+* A web-based census tool that shows where workers are employed and where they live
+* Links data on where people work to data on where they live
+* Hybrid data based on combining survey and administrative data with some additional modeling estimation and "fuzzing"
+* Best Uses
+  - Identifying small-area workforce characteristics
+  - Mapping commuting patterns
+  
+## What is LEHD?
+
+![LEHD Structure](C:\\Users\\elmue\\Documents\\Teaching\\usp597_Spring2019\\lecture\\images\\lehd_structure.png)
+
+
+##  Data Sources LEHD Origin-Destination Employment Statistics (LODES)
+
+* Job charactersitics from quartlery UI filing
+* Residence characteristics from multiple federal agencies
+* Job is counted if a worker is employed with positive earnings during the reference quarter, as well as one quarter prior
+* Note the data are "synthetic"...they are modeled in order to protect confidentiality while maintaining accuracy
+
+##  Geographic Details
+
+* All states and DC have data available
+* Base geography- 2010 Census blocks
+  - allows you to sum upto different kinds of geographies (remember census geo-hierarchy)
+  
+##  Time Frame
+
+Data are available from 2002-2015, but this coverage is *uneven*, some states don't have all years for all datasets (i.e. MA and DC)
+
+Check [LEHD Documentation](https://lehd.ces.census.gov/data/lodes/LODES7/LODESTechDoc7.3.pdf)
+
+##  Database Structure
+
+* Area Characteristic (AC)
+  - RAC: Residence Area Characteristic data, jobs are totaled by *home* census block
+  - WAC: Workplace Area Characteristic data, jobs are totaled by census block
+  - OD: Origin-Destination data, job totals associated with both a home Census block and work Census block
+  
+  
+##  Variables Available
+
+* Age in three categories (29 or younger, 30-54, 55 and older)
+* Earnings in three categories (<=$1,250/month, $1,250-3,333/month, >$3,333/month)
+* 3 industry groups and 20 industry categories
+
+##  Variables Available cont.
+
+* Race/ethnicity and education
+  - 6 race groups
+  - Ethnicity, 2 categories
+  - Educ attainment for two age groups, 30-54 and 55+
+    - Less than HS, HS/equivalent, Assoc/some college, Bachelors or more
+* Sex
+
+##  Variables Available cont.
+
+"Dominance": primary or non-primary
+
+- Primary jobs = job earned the individual the most money
+- The # of primary jobs = # workers
+
+Ownership: private or public (must calculate public employment)
+Firm age and firm size (only available 2011-newer for All Private Jobs)
+
+##  Coverage
+
+* Workers covered by UI system
+  - *does not* include self-employed
+* Federal workers added only recently (2010-2015)
+  - means public employment figures are a bit questionable pre-2010
+  
+# OnTheMap Tools
+
+## WAC/RAC Characteristics
+
+* Worker Area Profile Analysis
+* Home Area Profile Analysis
+* Comparison tool
+* Paired Area report
+
+##  OD Tools
+
+* Destination analyses
+* Distance/Direction Analysis
+* Inflow/Outflow
+
+# IPMUS- Entry to Census Microdata
+
+## IPUMS
+
+It is possible to get PUMS data from Census directly...BUT [IPUMS USA](https://usa.ipums.org/usa/), a project by Univ. of Minnesota is a better tool
+
+IPUMS offers US and International microdata surveys ranging from: ACS, CPS, ATUS (time use), NHANES etc
+
+## IPUMS Abacus
+
+An online tool and mobile app to query US microdata
+
+Good for quick queries...bar tricks...impressing potential employers
+
+## IPUMS Resources
+
+Multiple videos to support using the website. Ex. [how to use the data extract system](https://www.youtube.com/watch?v=tZR0aDwr91s&feature=youtu.be)
+
+[General FAQ/Tutorials](https://usa.ipums.org/usa/tutorials.shtml)
+
+## Analyzing IPUMS Data in R
+
+Anthony Damico has a website: [Analyze Survey Data For Free](http://asdfree.com/) with extensive instructions on analyzing complex survey data for free in R
+
+## What do I mean by complex?
+
+These surveys are *weighted*
+  - Have weights for individual observations to make representative of population
+  - Include replicate weights (a series of additional weights to measure variance correctly)
+ACS microdata is *hierarchical*
+  - contain *households* and *individual* weights
+  - Depending on the question you need to account for both household and individual characteristics
+
+## It's a lot...
+
+Microdata is complex and requires a lot of work...but it is *worth it* and we have software to make this easier
+
+You don't *need* to understand the math behind replicate weights, but you need to know replicate weights matter
+
+##  Next Steps
+
+This week register for the IPUMS website. Play with some of the online tools/abacus to see what you can get with it. 
+
+Next week we'll have our check-in and Nick Chun will walk us through starting actual analysis in microdata

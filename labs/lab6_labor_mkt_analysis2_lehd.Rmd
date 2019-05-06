@@ -1,0 +1,108 @@
+
+---
+title: "Lab 5- Labor Market Analysis 2 OnTheMap"
+subtitle: "USP 597+-Regional Economic Analysis"
+author: "Jamaal Green"
+date: "`r Sys.Date()`"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The Census Bureau's OnTheMap tool is one of the most useful tools that has been developed in recent years for analyzing local labor market dynamics.  In this lab you will be introduced to all three data types within the OnTheMap tool, and a variety of different ways you can use the data.
+
+# Where the Jobs Are: Workplace Association Data
+
+* Log on to the site [OnTheMap](https://onthemap.ces.census.gov/). On the left you will see a series tabs while a map of the continental US is the main part of the screen. Click the 'Search' button under the 'Start' tab.
+    + Click the search button and start to to type in your MSA
+  
+![](images/onthemap_start.png)
+
+* See the box called "Perform Analysis on Selection Area"? If you click it there are multiple choices that pop up
+
+    + Home/Work Area: This is simply whether you want to analyze the geography based on place of work data or place of residence.  In our case, we want to start by looking at the jobs in the MSA, so select "Work."  This will only provide us data on jobs located within the MSA, regardless of where people live.
+    + Analysis Type: The simplest form of analysis is the "Area Profile," which provides a snapshot of the characteristics of the jobs in that geography (and the workers holding them), including industry, earnings, age, sex, race, ethnicity, and educational attainment.  You can also choose to compare areas within your chosen geography, which we will do later.  We will ignore the bottom three choices for now, as they all pertain to the Origin-Destination (O+D) dataset.  For now, simply choose "Area Profile," and under the Labor Market Segment, keep "All Workers."  
+    + Year:  For most geographies, you will have a choice of years from 2002 to 2015.  We would like to see the change in employment over time, but recall that government workers were added in 2010. So to make sure our data are comparable over time,  let's pick 2010 through 2015. 
+    + Job Type:  This allows us to narrow our selection from all jobs to primary jobs (i.e., only the highest paid job held by a worker), or from all jobs to private+sector (i.e., non+government) jobs, and primary+private jobs. Since we are looking at jobs and not workers, we want "all jobs."  
+    + When you have done this, select "Go!"
+
+* After the analysis has been completed, you will see a map with both a thermal overlay, where darker colors represent more jobs, and a series of points (dots), where the bigger dot means more jobs.   You are likely to find that your downtown/CBD area shows up as your job center.  The data in this map is depicted at the level of Census blocks, which are the lowest geography in the LEHD data, which is the basis for OnTheMap.
+
+	  + On the left+hand side you will see a series of display setting and controls.  Here you can change the color of your map, turn off certain overlays or the outline for your MSA.  (I usually turn off the point overlays because I find them hard to see.)
+    + In this same pane you can move between years of data – look for where it says "2011" and change your years.  You will likely see slight but perceptible shifts in the maps based on employment changes over time. You can click "animate overlays" under the map control tab to see in full screen how the density of jobs changes over time. 
+    + On the right+hand side you will see the characteristics of the jobs in the MSA – and the workers holding them.  For example, if you look down to "Industry" it will give you a breakdown of the jobs by 2+digit NAICS sector.  By clicking on the header "Industry" it will show a pie chart in the upper+right with the breakdown by industry.  
+    + If you click on a particular sector (e.g., Manufacturing), the map will shift to show where those jobs are located.  You can do this by any of the characteristics in the Area Profile – Worker Age, Job Earnings, Worker Race, Worker Ethnicity, Worker Educational Attainment, Worker Sex.  (Whenever you click on one, you will just need to click "Reset Table" to go back to the full set of profile characteristics.)
+    + To export the maps that you have created, you have two options via the "Print Chart/Map" function on the left side: export it as a PDF file, or as a set of image (PNG) files.  If you do the latter (which tends to give higher quality images, and also allows you to import the map elements separately so that you can customize them on a powerpoint or in a report), make sure that you have your pop+up blocker set to allow popups for this site. 
+
+* Often you will want to compare different subareas within your MSA, such as cities, counties, ZIP codes or census tracts.  We can do this by going to the "Change Setting" option on the lower+left, which will bring the original "Analysis Settings" dialog box back.  
+  + "Instead of Area Profile" we will choose "Area Comparison."
+  +	At this point we will need to decide what level of detail we want to compare.  Let's see     which ZIP codes are the main job centers in our MSA.  Under Areas to Compare, choose       "Zip  Codes (ZCTA)."   Click Go to run the analysis.
+  + By default, OnTheMap only shows the 10 largest of whatever areas we choose.  In some cases, though, we may want all the sub+areas, in which case we will change the "Number of Results" under Display Settings on the left side to "All".  You should now see a map with different colors for all the ZIP codes in your metro.
+  + As with the Area Profile we can filter our results by specific job characteristics, except this time we do so through the "Characteristic Filter" option under "Display Settings."  Click on "Total" and a menu box will pop up with a variety of other choices.  For example, let's look at where the manufacturing jobs are by ZIP code, by selecting NAICS Industry Sector +> Manufacturing." 
+  
+* One of the really cool functions in OnTheMap is the ability to draw buffers of specified distances around particular points or geographies (such as tracts).  For example, we might want to know how many of the metro's jobs are located within five miles of the CBD.
+  + First we need to clear our existing selection (the MSA).  We do this by going to the "Selection" tab in the upper+left hand side, and under "Drawing Tools," we choose "Clear Selection."  To clear the results on the map we click the "X" under the "Results" tab.  We should be left with a blank map.
+  + Using the zoom tools on the left side of the map, zoom into your downtown.  Under "Drawing Tools," click "Draw Point(s)" and then click on the map where you think the center of your downtown should be (doesn't need to be precise).
+  + Under "Add Layer Selection," choose "No Selected Layer."  
+  + Under "Add Buffer to Selection," we have a couple of options.  The simplest is to specify a radial distance – in this case 5 miles – that it will draw a buffer.  Choose "Simple/Ring" and enter "5" in the box."  Click "Confirm Selection" above, and then "Perform Analysis on Selection Area".
+  + We return to the "Analysis Setting" dialog that we are already familiar with.  In this case we simply want the number of jobs within that 5 mile radius, so select "Work" under Home/Work, "Area Profile>All Workers," the most current year (2015) and "All Jobs."  Click Go.
+  + If we zoom out we can see a circle 5 miles in its radius around the downtown – within this circle we see the thermal and point overlays to show where the jobs are located by block.  On the right hand side we see basic profile of jobs – total number, breakdown by age, industry, etc.  
+  + If we go back to the "Selection" we can choose a "Donut" buffer, which allows us to specify a particular distance in miles as our inside part of the ring and outside.  For example, we could look at the jobs between 5 and 10 miles from the CBD, and re+run the analysis. 
+  + There is another buffer option, a "Plume" buffer, which is more complicated and won't be discussed here. 
+
+# Where the workers are: Residence Area Characteristic Data
+
+Producing maps and analysis based on location of residents – where they live – is quite similar to mapping jobs.  The main difference is that you will need to focus on "Primary Jobs" rather than "All Jobs" as a way of avoiding double+counting of workers who hold multiple jobs.
+
+* Let’s analyze the workforce characteristics of workers from a particular Census tract.  
+    + To do this, clear whatever geographic selection you have already made, and under the Drawing Tools, use either the Draw Polygon or Draw Point feature to highlight where you like to analyze (clicking for each part of the polygon and double+clicking when done). 
+    + To identify the tract that relates to your polygon, go to the "Add Layer Selection" and make sure that it is set to "Census Tracts."  Click "Confirm Selection," which will bring up all the tracts that your point or polygon intersects.  If you want to change your tract, you can click "Clear Selection" under Drawing Tools and try again.
+    + Once you have done this you will be brought to the same "Analysis Settings" option window that you had earlier.  You can choose either an Area Profile, which allows you to see the characteristics (age, industry, education, income, race, ethnicity, sex) of the workers in that area, or the Area Comparison, which allows you to compare characteristics between subareas (e.g., block groups within your tract).
+    + Overall, the Residence Area Characteristic data are similar in many respects to ACS data, which provide characteristics of workers for particular geographies.  The main advantage of the LEHD/OnTheMap data is that it is annualized, rather than 5+year data for ACS.  But the demographic and socioeconomic characteristics are less rich – for example, LEHD does not have occupational data. 
+
+# Where Jobs and Workers Meet: Using Origin-Destination Data
+
+One of the great advances of the LEHD data is the ability to analyze and visualize commuting flows relatively easily.  There are three different reports that the OnTheMap site allows you to do, using the Origin-Destination (O+D) data.  
+
+* First, let’s pick a geography to analyze – a city, ZIP code, Census tract, etc.  We do this using the same location selection procedure we’ve done before – either searching from the "Start" menu (if you have a specific name of a place), or using the Selection tool with the Drawing Tools in the case of tracts, Zip codes, etc.  
+* We will then need to decide whether we want to analyze it as a destination (i.e., place of work) or origin (i.e., place of residence).  We do this in the "Home/Work Area" section of the "Analysis Settings" box we have seen multiple times now.
+
+##Destination Analysis
+
+* The first type of Origin-Destination Analysis, “Destination” simply tells us where workers are coming from (if we have chosen our geography as a place of work), or where they are going to (if we have chosen it as a place of residence).  
+    + From here the key question is what level of detail you want for the origin/destination.  You can have as high level of info as county or MSA, or as low as Census tracts.  You likely want to pick a level of analysis that is manageable to work with and depict, but still gives you enough detail to depict the flows adequately.
+    + For example, let’s look which cities the workers in our central city our coming from.  To do this, we would use the selection tool to highlight the CBD, make sure we choose “Work” under Home/Work Area, and then choose “Destination>Places (Cities, CDPs, etc.)”.  
+    + Since we are looking at worker characteristics, we choose “Primary Jobs” rather than “All Jobs.”
+    + The resulting map depicts the concentration of workers at the city level.  On the right side you will see a breakdown of the cities, from highest to lowest.  By default, it will list the top 10 origins, but you can change this on the left side to show more or all the places. 
+  
+* You can filter your analysis to look at subgroups within that geography, but your groupings are much less detailed than in the WAC and RAC files.  Under “Display Settings” on the upper+left, you can break it out by:
+
+    + Worker Age: 29 or younger, 30 to  54, 55 and older
+    + Earnings: <=\$1,250/month, $1251+3,333/month, >$3,333/month
+    + Industry Segment: Goods Producing; Trade, Transportation and Utilities; and All Other Services 
+  
+## Distance+Direction Analysis
+
+The second kind of Origin-Destination analysis shows the movement of workers by distance and direction.  The resulting map shows the number/share of workers coming from less than 10 miles, 10-24 miles, 25-50 miles and more than 50 miles, and a “Radar Sheet” depicts the directionality by distance.  As with Destination Analysis, you can filter the analysis by broad subgroups mentioned above.
+
+## Inflow+Outflow Report
+
+The final O+D analysis report provides an overall “flow” analysis of workers in/out of the selected geography.  It produces a “venn” diagram consisting of three groups: workers who work in that geography but live elsewhere (i.e., in+commuters); workers who live in that geography but work elsewhere (i.e., out+commuters); and people who live and work within that geography. And again, you can filter the analysis to look at broad subgroups. 
+
+# Final Assignment
+
+Write a memo using information from the OnTheMap tool to complete the following analyses:
+
+* Compare private sector employment change in the "urban core" (in this case your MSA's primary city) from the years 2004 and 2011 and compare it to employment change the MSA overall. Specifically...
+    + Which industry sectors grew fastest?
+    + Which wage groups grew fastest?
+* Where is manufacturing employment in your region? For 2015, identify the zip codes in your MSA that have the highest total number of manufacturing jobs *and* the highest share of zip code total employment. 
+    + Choose *one* of those zip codes and analyze where those workers come from. Specifically, what cities are workers commuting from? What are the commuting distances these workers are traveling? And what is the inflow+outflow report for this particular zip code?
+* Identify a census tract in your region with a high concentration of poverty (identify that tract using Census data). What are the demographic characteristics of workers that *live* in that tract? How do those characteristics compare to the region as a whole? Where do workers in that tract *work* and what industry employs most of those workers?
+
+**Finally**- It is possible to export your tables from OnTheMap. In making your visualizations that are not specifically inflow+outflow destinations or directional plots, export your data and make your visualizations in R.
+
+
