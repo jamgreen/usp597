@@ -241,10 +241,10 @@ We will make a similar figure for our MSAs. While we could pull this data from *
 
 ```{r pyramid_prep}
 
-var_tables <- load_variables(year = 2016, dataset = "acs5", cache = TRUE)
+var_tables <- load_variables(year = 2018, dataset = "acs5", cache = TRUE)
 
 sex_by_age <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",
-                      table = "B01001", year = 2016,survey = "acs5" ,state = "md")
+                      table = "B01001", year = 2018,survey = "acs5")
 
 sex_by_age <- clean_names(sex_by_age, case = "snake")
 
@@ -301,7 +301,7 @@ sex_by_age2 <- sex_by_age2 %>%
 
 Okay...that was a bit of work, but now we can plot!
 
-```{r pyramid_plot, fig.cap="Demographic Structure, Baltimore MSA, 2016"}
+```{r pyramid_plot, fig.cap="Demographic Structure, Baltimore MSA, 2018"}
 
 #let's get our labels set up 
 
@@ -321,11 +321,11 @@ ggplot(sex_by_age2, aes(x = age, y = percent, fill = sex)) +
   theme(strip.text.x = element_text(size = 6)) +
   labs(x = "", y = "", fill = "", 
     caption = "Source: American Community Survey,\n 
-    2012-2016 using tidycensus")
+    2014-2018 using tidycensus")
 
 ```
 
-Alright...that was a good bit of work, but we've now got a population pyramid for our MSA in 2016.
+Alright...that was a good bit of work, but we've now got a population pyramid for our MSA in 2018.
 
 # The rest of the assignment
 

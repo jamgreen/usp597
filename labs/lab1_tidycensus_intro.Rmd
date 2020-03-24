@@ -44,7 +44,7 @@ This may take a few minutes as there are many tidyverse packages.
 
 While the tidyverse packages are loading we will request our Census API key. API stands for "Application Programming Interface". This will allow us to more easily query census data from one place without having to use a tool like FactFinder or DataFerret. Click this link here to request key: [https://api.census.gov/data/key_signup.html](https://api.census.gov/data/key_signup.html).
 
-It will take a couple of minutes but you should receive a key form Census before too long.
+It will take a couple of minutes but you should receive a key from Census before too long.
 
 # Tidycensus
 
@@ -70,7 +70,7 @@ Alright, now let's use the tidyverse and tidycensus to do a quick check on the t
 
 #get the data tables
 
-v15 <- load_variables(2017, "acs5", cache = TRUE)
+v17 <- load_variables(2017, "acs5", cache = TRUE)
 
 # getting the total population for each county in Oregon
 
