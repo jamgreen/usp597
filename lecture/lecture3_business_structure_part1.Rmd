@@ -1,8 +1,16 @@
 ---
-title: "USP 597- Regional Business\n Structure"
+title: |-
+  USP 597- Regional Business
+   Structure
 author: "Jamaal Green"
-date: "April 8, 2019"
-output: ioslides_presentation
+date: "April 13, 2020"
+output:
+  ioslides_presentation:
+    incremental: yes
+    self_contained: yes
+    theme: cosmo
+  beamer_presentation:
+    incremental: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Regional Profile due April 14
 
 - Employment growth (from BEA)
-- Unemployment rates (BLS)
+- Unemployment rates/Employment (BLS)
 - Per capita income (BEA)
 - GDP per capita (BEA)
 - Poverty rate (Census/ACS)
@@ -54,21 +62,21 @@ Two broad issues in business structure:
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
 
 if(!require(pacman)){install.packages("pacman"); library(pacman)}
-p_load(readr, data.table, janitor, here, kableExtra)
+p_load(readr, data.table, janitor, here, kableExtra, bit64)
 
-susb <- fread("https://www2.census.gov/programs-surveys/susb/tables/2016/us_state_6digitnaics_2016.txt?#", header = TRUE, na.strings = "--", showProgress = TRUE)
+susb <- fread("https://www2.census.gov/programs-surveys/susb/tables/2017/us_state_6digitnaics_2017.txt", header = TRUE, na.strings = "--", showProgress = TRUE)
 
 us_total <- susb[STATEDSCR == "United States" & NCSDSCR == "Total"]
 
 rm(susb)
 
-us_total <- us_total[, list(FIRM, ESTB, EMPL_N, STATEDSCR, entrsizedscr)]
+us_total <- us_total[, list(FIRM, ESTB, EMPL_N, STATEDSCR, ENTRSIZEDSCR)]
 
 us_total <- clean_names(us_total, case = "snake")
 
-us_tot_shares <- us_total[, `:=` (firm_share = firm/5954684,
-                                  estab_share = estb/7757807,
-                                  emp_share = empl_n/126752238)]
+us_tot_shares <- us_total[, `:=` (firm_share = firm/5996900,
+                                  estab_share = estb/7860674,
+                                  emp_share = empl_n/128591812)]
 
 us_tot_shares <- us_tot_shares[, list(statedscr, entrsizedscr, firm, estb, empl_n, firm_share, estab_share, emp_share)]
 
@@ -135,7 +143,7 @@ rm(us_total)
 
 ##  Business/Employment by Size and Type {.smaller}
 
-Employmnt by _firm_ size:
+Employment by _firm_ size:
 
 * [https://www.census.gov/programs-surveys/susb.html](https://www.census.gov/programs-surveys/susb.html)
 * [https://www.sba.gov/advocacy/firm-size-data](https://www.sba.gov/advocacy/firm-size-data)

@@ -1,8 +1,14 @@
 ---
 title: "USP 597- Demographics and the Regional Economy"
 author: "Jamaal Green"
-date: "April 2, 2019"
-output: ioslides_presentation
+date: "April 6, 2020"
+output:
+  beamer_presentation:
+    incremental: yes
+  ioslides_presentation:
+    incremental: yes
+    self_contained: yes
+    theme: cosmo
 ---
 
 ```{r setup, include=FALSE}
@@ -49,7 +55,7 @@ How old is your population? How young? How educated? Is population growing or no
 > - Race/ethnicity
 > - Are people looking for work?
 
-##  Some important concepts
+##  Some important concepts { .smaller}
 
 - Counts or "enumeration" vs estimates vs forecasts
 - Households vs persons vs families
@@ -149,7 +155,7 @@ This allows us to see precisely *how* our regions are growing. You can find this
 - Make sure our work is replicable nd well documented
 - Ultimately, to make life *easier* for you as the analyst
 
-## Data Management
+## Data Management { .smaller}
 
 - Save your raw data and make sure it is backed up
 - Make sure the data is *usable*
@@ -173,10 +179,13 @@ Believe it or not, we are writing software. How can we make it better?
 - Provide a simple example
 - Look into reputable data sharing sites
 
-## Project Organization
+## Project Organization 
 
-- Put each project in it sown directory...named after that project (R projects give us this naturally)
+- Put each project in its own directory...named after that project (R projects give us this naturally)
 - Have a separate docs folder for documents, data folders for raw and processed data and source code in its own folder
+
+## Project Organization Example
+
 
 ![Wilson et al, 2017](images/good_enough_directory.png)
 

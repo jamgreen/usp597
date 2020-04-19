@@ -150,7 +150,7 @@ qwi_nat_annual <- qwi_nat %>%
             avg_pay = sum(avg_pay, na.rm = TRUE))
 ```
 
-Note that in the *group_by()* call I include the geography label (state name) along with the industry and yer so we get the average employment for an industry by year, by state. Next, I ungroup the dataframe so I run the *group_by()* again, but this time I sum only on the industry and year value so we get the final sum of state employment. The final table, then, gives us average industrial employment by year for the nation, as a whole.
+Note that in the *group_by()* call I include the geography label (state name) along with the industry and year so we get the average employment for an industry by year, by state. Next, I ungroup the dataframe so I run the *group_by()* again, but this time I sum only on the industry and year value so we get the final sum of state employment. The final table, then, gives us average industrial employment by year for the nation, as a whole.
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 
@@ -221,4 +221,4 @@ You have done most of what you need for the assignment. Here is what I want for 
   + 1 table with the 5 fastest growing and 5 most declining industries in your region
   + 1 table with the 5 most concentrated industries in your region and the five least concentrated
   + 2 graphs of your industry data. The choice of topic and graph type is up to you
-  + *EXTRA CREDIT*- go back to the LED website and get your regional data but now also pull male and female data. Make a graph showing the sex breakdown of your 5 fastes growing and 5 most declining industries. Does your region's economic restructuring have a gendered nature to it?
+  + *EXTRA CREDIT*- go back to the LED website and get your regional data but now also pull male and female data. Make a graph showing the sex breakdown of your 5 fastest growing and 5 most declining industries. Does your region's economic restructuring have a gendered nature to it?
