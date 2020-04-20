@@ -2,7 +2,11 @@
 title: "USP 597- Regional Economic Change"
 author: "Jamaal Green"
 date: "April 16, 2019"
-output: ioslides_presentation
+output:
+  beamer_presentation: 
+    theme: "metropolis"
+  ioslides_presentation: default
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
@@ -18,6 +22,7 @@ p_load(tidyverse, kableExtra, janitor, data.table, here)
 2.  What we can we surmise about the growth in our industries?
   + We will break down industry growth/decline to determine more about the regional dynamics that determine industrial change
 3.  Calculating and interpreting shift-share analysis
+4. Further background reading can be found in Quinterno chapter 3
 
 # Specialization and diversification
 
@@ -43,9 +48,9 @@ Values range from 0 (perfect similarity) to 1 (perfect dissimilarity)
 
 There is also an index of localization that is the **sum** of absolute deviations of an industry across regions relative to overall employment
 
-## Coefficient of Specialization (cont.) { .smaller}
+## Coefficient of Specialization (cont.) { .smallest}
 
-| Ref      | A   | B   | C    |      |     | A         | B         |   c       |
+| Ref      | A   | B   | C    |      |     | A         | B         |   C       |
 |----------|-----|-----|------|------|-----|-----------|-----------|-----------|
 | Industry | %   | %   | %    | %    |     | Deviation | Deviation | Deviation |
 | 1        | 0.2 | 0.2 | 0.3  | 0.5  |     | 0         | 0.1       | 0.3       |
@@ -73,7 +78,7 @@ Assume we have 10 firms producing some good in a region. We shall assume that 3 
 
 In our second case let's assume one firm produces 90%.
 
-Competitive (ish) market:<font size = "2.5"> $$ (0.30^2 + 0.30^2 + 0.30^2) + (0.014^2 + 0.014^2 + 0.014^2 + 0.014^2 + 
+Competitive (ish) market:<font size = "1.5"> $$ (0.30^2 + 0.30^2 + 0.30^2) + (0.014^2 + 0.014^2 + 0.014^2 + 0.014^2 + 
 0.014^2 + 0.014^2 + 0.014^2) = 0.271 (27.1\%)$$</font>
 
 ## HHI Exmaple, Highly Concentrated Industry
