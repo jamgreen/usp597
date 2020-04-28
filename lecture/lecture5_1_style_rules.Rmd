@@ -1,0 +1,151 @@
+---
+title: "R 'Style' And Some Rules of the Game"
+subtitle: "USP 597- Regional Economic Analysis"
+author: "Jamaal Green"
+institute: "Portland State University"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fr4ds.had.co.nz%2F&psig=AOvVaw0dKggrbdFpjzaq6n31X2sX&ust=1588092739298000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLjt38-IiekCFQAAAAAdAAAAABAD)
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+
+Image credit: [R for Data Science](r4ds.had.co.nz)
+
+## What is this about?
+
+1. We are halfway through and we are quickly growing into competent R users and junion "data scientists" (to use the parlance of the day)
+
+--
+
+2. As such, we should be focusing on not just learning R concepts (which is, of course vital), but in developing habits to write *better* R code. Remember, our code is useless if we can't understand what we're trying to do. 
+
+--
+
+3. These are some brief slides on improving our *style* with R and discussing some things to be wary of in RStudio (remember, always be wary of defaults)
+
+---
+
+## Why does style matter?
+
+An essential aspect of reproducability is legibility. Can _YOU_ understand what your code is doing? 
+
+An essential part of legibility is adhering to a set of principles or grammar of code. Keeping these following guidelines in mind will make your code more readable, and, in turn, more understandable.
+
+---
+
+## An Opinionated Guide
+
+These are clearly not requirements for coding and embody the opinions of their creators. But these guideliness can help. Use what is useful and disregard that which is not.
+
+---
+
+## Resources
+
+[Google R Style Guide](https://google.github.io/styleguide/Rguide.html)
+
+[Tidyverse Style Guide](https://style.tidyverse.org/)
+
+---
+
+# Syntax
+
+---
+
+## Spacing Operators
+
+Place spaces around operators (+, -, <- etc.)
+
+```
+# Good
+average <- mean(feet / 12 + inches, na.rm = TRUE)
+
+# Bad
+average<-mean(feet/12+inches,na.rm=TRUE)
+
+```
+---
+
+## Spacing Parentheses
+
+Place space before left parentheses (except in a function call)
+
+```
+# Good
+if (debug) do(x)
+plot(x, y)
+
+# Bad
+if(debug)do(x)
+plot (x, y)
+```
+---
+
+## Spacing Curly Braces
+
+Open curly braces should *never* go on its own line, and should be followed by a new line. Closing curly brace should *always* go on its own line.
+
+```
+# Good
+
+if (y < 0 && debug) {
+  message("Y is negative")
+}
+
+if (y == 0) {
+  log(x)
+} else {
+  y ^ x
+}
+```
+
+---
+
+# RStudio
+
+---
+
+## DO NOT SAVE YOUR WORKSPACE
+
+When you exist RStudio it will ask if you want to save your workspace. *Always* say no. When you re-start R you should always be starting a fresh session. Use your scripts and documentation, not the session, to keep track of your progress.
+
+---
+
+## Copy your import syntax if you're using GUI
+
+If you use the GUI to import datasets, copy and paste the syntax into your script. Remember not all users will have RStudio
+
+
+---
+
+# Some Rules of the Game
+
+---
+
+## Don't be afraid to Google
+
+We've discussed before, but there are numerous resources online to answer your questions. 
+
+---
+
+## Don't be afriad to contact me
+
+I will try and answer any emails or requests you may have, BUT make sure you've searched independently before. It's useful to me to know what you've already done. 
+
+---
+## Work the DataCamp
+
+I know the labs take time, but I continue to get questions regarding some basic syntax in dplyr. You should *know* what the basic dplyr verbs are (select, mutate etc.) and how they impact your table
+
+The labs offer a good bit of useful sample syntax, but you need to work your courses and stretch on your memos to get better
