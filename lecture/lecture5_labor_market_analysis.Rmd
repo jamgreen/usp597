@@ -2,29 +2,17 @@
 title: "Labor Market Analysis 1"
 subtitle: "USP 597- Regional Economic Analysis"
 author: "Jamaal Green"
-date: "2019/04/28 (updated: `r Sys.Date()`)"
-output:
-  xaringan::moon_reader:
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+date: "`r Sys.Date()`"
+output: binb::metropolis
 ---
 
 ## Check-in And Update
 
 1. We are halfway through. How is everyone feeling? Is the R becoming easier to understand? What issues still puzzle you?
 
---
-
 2.  As I mentioned on the website I will introduce PUMS over the next few weeks. The PUMS are *complex*, by design, and I do not expect you all to be experts, but being familiar with the potential microdata will take your analysis to next level. 
 
---
-
 3.  Resources...is everyone making progress in DataCamp? Has anyone gone to the recommended guides in the syllabus ([R4DS](https://r4ds.had.co.nz/), [R Graphics Cookbook 2nd Edition](https://r-graphics.org/))?
-
---
 
 4. What can I do to make the labs/lectures more understandable or approachable?
 
@@ -38,25 +26,18 @@ output:
 
 * What are the rates of labor market participation in my region across different groups?
 
---
-
 * What sectors of the economy are people working in?
-
---
 
 * What is the occupational composition of my regional workforce?
 
---
-
-* How do occupaitonal wages compare in my region to the nation? What jobs are projected to grow? 
+* How do occupational wages compare in my region to the nation? What jobs are projected to grow? 
 
 ---
 
 ## Labor Force Status
 
-![](images/quinterno_p163.png)
+![Source: Quinterno, pg 163](images/quinterno_p163.png)
 
-.footnote[Source: Quinterno, pg 163]
 
 ---
 
@@ -84,20 +65,20 @@ output:
 
 
 
-## Unemployment Rate by Race/Ethnicity, 2013-2017
+## Unemployment Rate by Race/Ethnicity, 2014-2018
 
-```{r tidycensus_start, echo=FALSE, message=FALSE, warning=FALSE}
+```{r tidycensus_start, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 
 if(!require(pacman)){install.packages("pacman"); library(pacman)}
-p_load(tidycensus, dplyr, ggplot2, hrbrthemes)
+p_load(tidycensus, dplyr, ggplot2, ggthemes, hrbrthemes)
 
-var_tab <- load_variables(year = 2016, dataset = "acs5/subject", cache = TRUE)
+# var_tab <- load_variables(year = 2018, dataset = "acs5/subject", cache = TRUE)
 
-emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",year = 2017, variables = c("White NH" = "S2301_C04_012",
+emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",year = 2018, variables = c("White NH" = "S2301_C04_012",
                                                                                       "Black NH" = "S2301_C04_013", "Amer. Indian NH" = "S2301_C04_014", "Asian NH" = "S2301_C04_015", "Native Hawaiian NH" = "S2301_C04_016", "Other NH" = "S2301_C04_017",
 "Two or more NH" = "S2301_C04_018", "Hispanic/Latinx" = "S2301_C04_019"))
 
-emp_status_us <- get_acs(geography = "us",year = 2017, variables = c("White NH" = "S2301_C04_012",
+emp_status_us <- get_acs(geography = "us",year = 2018, variables = c("White NH" = "S2301_C04_012",
                                                                                       "Black NH" = "S2301_C04_013", "Amer. Indian NH" = "S2301_C04_014", "Asian NH" = "S2301_C04_015", "Native Hawaiian NH" = "S2301_C04_016", "Other NH" = "S2301_C04_017",
 "Two or more NH" = "S2301_C04_018", "Hispanic/Latinx" = "S2301_C04_019"))
 
@@ -108,18 +89,17 @@ bmore_emp <- emp_status %>%
 ggplot(bmore_emp, aes(variable, estimate, fill = NAME)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(x = "Race/Ethnicity", y = "") +
-  scale_y_continuous(labels = function(x) paste0(x, "%")) + 
+  scale_y_continuous(labels = scales::percent) + 
   geom_errorbar(aes(ymin = estimate - moe, ymax = estimate + moe),  width = .75, position = "dodge") +
   coord_flip() +
-  theme_ipsum_rc() +
+  theme_minimal() +
   theme(legend.position = "bottom")
 
 ```
 
 
-.footnote[Source: ACS 2013-2017, table = S2301]
+\footnotetext[1]{Source: ACS 2014-2018, table = S2301}
 
----
 
 # What sectors of the economy are people working in?
 
@@ -128,15 +108,17 @@ ggplot(bmore_emp, aes(variable, estimate, fill = NAME)) +
 ## Class of Worker
 
 Private for-profit
-- Employee of a private company
-- Self-employed incorporated
+
+  - Employee of a private company
+  - Self-employed incorporated
 
 Private not-for-profit
 
 Government
-- Local
-- State
-- Federal
+
+  - Local
+  - State
+  - Federal
 
 Self-employed in unincporporated business
 
@@ -144,20 +126,19 @@ Self-employed in unincporporated business
 
 ## Class of Worker
 
-.footnote[Source: ACS 2013-2017, table = S2408]
 
 
 ```{r class_worker, echo=FALSE, message=FALSE, warning=FALSE}
 
-worker_class <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year = 2017)
+worker_class <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year = 2018)
 
 worker_class <- worker_class %>% 
-  mutate(class_share = estimate/1400048)
+  mutate(class_share = estimate/1401968)
 
-worker_class_us <- get_acs(geography = "us", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year =2017)
+worker_class_us <- get_acs(geography = "us", variables = c("Total Emp." = "S2408_C01_001", "Private, for-profit" = "S2408_C01_002", "Private, not-for-profit" = "S2408_C01_005", "Local Gov." = "S2408_C01_006", "State Gov." = "S2408_C01_007", "Federal" = "S2408_C01_008", "Self Employed" = "S2408_C01_009"), year = 2018)
 
 worker_class_us <- worker_class_us %>% 
-  mutate(class_share = estimate/150599165)
+  mutate(class_share = estimate/152739884)
 
 worker_class_bmore <- worker_class %>% 
   filter(GEOID == "12580") %>% 
@@ -172,11 +153,13 @@ ggplot(worker_class_bmore, aes(variable, class_share, fill = NAME)) +
   labs(x = "Employment Status", y = "") +
   scale_y_continuous(labels = scales::percent) + 
   coord_flip() +
-  theme_ipsum_rc() +
+  theme_minimal() +
   theme(legend.position = "bottom")
 
 
 ```
+
+\footnotetext[2]{Source: ACS 2013-2017, table = S2408}
 
 ---
 
@@ -186,11 +169,10 @@ Equal Employment Opportunity Tables
 
 Detailed breakdown of occupational demographics by race, gender, citizenship status etc
 
-Potentially very powerful but *VERY* out of data (2010 latest tabulations) and can reproduce most of it with ACS microdata
+Potentially very powerful but *VERY* out of date (2010 latest tabulations) and can reproduce most of it with ACS microdata
 
 [Census EEO](https://www.census.gov/topics/employment/equal-employment-opportunity-tabulation/guidance.html)
 
----
 
 # Occupational Composition and Wages
 
@@ -222,7 +204,6 @@ Potentially very powerful but *VERY* out of data (2010 latest tabulations) and c
 
 ![](images/bls_occ_projections.png)
 
----
 
 # Intro. to PUMS
 
@@ -238,7 +219,7 @@ Today we will *NOT* be doing any PUMS analysis in R. Just overview. Ideally next
 
 ##  What is it?
 
-The PUMS (Public Use Microdata Sample) give sus the *individual* survey responses to the ACS
+The PUMS (Public Use Microdata Sample) gives us the *individual* survey responses to the ACS
 
 Has 1% and 5% samples
 
@@ -256,7 +237,8 @@ Data comes in individual and household estimates that have individual weights
 ## PUMS Geographies
 
 PUMS comes in census region, division, state and PUMA only (from census)
-  - IPUMS does prive MSA and county estimates, but note the geographies may not be consistent
+
+  * IPUMS does provide MSA and county estimates, but note the geographies may not be consistent
   
 ## PUMAs- Public Use Microdata Areas
 

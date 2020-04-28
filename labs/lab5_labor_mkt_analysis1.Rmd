@@ -21,19 +21,21 @@ We will grab "Employment Status" data from the ACS using tidycensus. We are goin
 if(!require(pacman)){install.packages("pacman"); library(pacman)}
 p_load(tidycensus, dplyr, ggplot2, hrbrthemes)
 
-emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",year = 2017, variables = c("White NH" = "S2301_C04_012",                              "Black NH" = "S2301_C04_013", 
-                                                                                        "Amer. Indian NH" = "S2301_C04_014",
-                                                                                       "Asian NH" = "S2301_C04_015", 
-                                                                                       "Native Hawaiian NH" = "S2301_C04_016",                       
-                                                                                       "Other NH" = "S2301_C04_017",
-                                                                                      
-"Two or more NH" = "S2301_C04_018",                            
-"Hispanic/Latinx" = "S2301_C04_019"))
+emp_status <- get_acs(geography = "metropolitan statistical area/micropolitan statistical area",
+                      year = 2018, 
+                      variables = c("White NH" = "S2301_C04_012",
+                                    "Black NH" = "S2301_C04_013", 
+                                    "Amer. Indian NH" = "S2301_C04_014",
+                                    "Asian NH" = "S2301_C04_015", 
+                                    "Native Hawaiian NH" = "S2301_C04_016",                       
+                                    "Other NH" = "S2301_C04_017",
+                                    "Two or more NH" = "S2301_C04_018",                            
+                                    "Hispanic/Latinx" = "S2301_C04_019"))
 ```
 
 ```{r educ_attainment_race2, echo=TRUE, message=FALSE, warning=FALSE}
 
-emp_status_us <- get_acs(geography = "us",year = 2017, 
+emp_status_us <- get_acs(geography = "us",year = 2018, 
 variables = c("White NH" = "S2301_C04_012", "Black NH" = "S2301_C04_013", 
 "Amer. Indian NH" = "S2301_C04_014", "Asian NH" = "S2301_C04_015", 
 "Native Hawaiian NH" = "S2301_C04_016", "Other NH" = "S2301_C04_017",
@@ -79,10 +81,10 @@ variables = c("Total Emp." = "S2408_C01_001",
               "State Gov." = "S2408_C01_007", 
               "Federal" = "S2408_C01_008", 
               "Self Employed" = "S2408_C01_009"), 
-year = 2017)
+year = 2018)
 
 worker_class <- worker_class %>% 
-  mutate(class_share = estimate/1400048)
+  mutate(class_share = estimate/1401968)
 
 worker_class_us <- get_acs(geography = "us", 
 variables = c("Total Emp." = "S2408_C01_001", 
@@ -91,10 +93,10 @@ variables = c("Total Emp." = "S2408_C01_001",
               "Local Gov." = "S2408_C01_006", 
               "State Gov." = "S2408_C01_007", 
               "Federal" = "S2408_C01_008",
-              "Self Employed" = "S2408_C01_009"), year =2017)
+              "Self Employed" = "S2408_C01_009"), year = 2018)
 
 worker_class_us <- worker_class_us %>% 
-  mutate(class_share = estimate/150599165)
+  mutate(class_share = estimate/152739884)
 
 
 ```
@@ -109,7 +111,10 @@ worker_class_bmore <- worker_class %>%
   filter(variable != "Total Emp.")
 
 worker_class_bmore <- worker_class_bmore %>% 
-  mutate(variable = factor(variable, levels = c("Private, for-profit", "Private, not-for-profit", "Local Gov.", "State Gov.", "Federal", "Self Employed")))
+  mutate(variable = factor(variable, 
+                           levels = c("Private, for-profit", "Private, not-for-profit",
+                                      "Local Gov.", "State Gov.", "Federal", 
+                                      "Self Employed")))
 
 ```
 
@@ -130,7 +135,7 @@ ggplot(worker_class_bmore, aes(variable, class_share, fill = NAME)) +
 
 # Occupational Employment and Wages
 
-Navigate to the [BLS OES Database Box](https://www.bls.gov/oes/#databases). Click the one screen data search and select multiple occupations for one geographic area. Choose metropolitan area and select your assignment area. Next, click "All Occupations in this list" and for datatypes we will choose employment, hour and annual mean wage. We will choose the May 2018 release and download the Excel sheet. Open the sheet in Excel and fix the table so your column headers and names are correct and save it as a csv. 
+Navigate to the [BLS OES Database Box](https://www.bls.gov/oes/#databases). Click the one screen data search and select multiple occupations for one geographic area. Choose metropolitan area and select your assignment area. Next, click "All Occupations in this list" and for variables we will choose employment, hour and annual mean wage. We will choose the May 2019 release and download the Excel sheet. Open the sheet in Excel and fix the table so your column headers and names are correct and save it as a csv. 
 
 Next, repeat this for the national file. 
 
@@ -138,13 +143,13 @@ Calculate location quotients for your occupational employment figures and divide
 
 ## Past Occupational Employment
 
-Next, navigate the [BLS tables link](https://www.bls.gov/oes/tables.htm) and download the 2008 Metropolitan and non-metrpolitan table links. The "dl_" tables correspond to different MSAs. Bring them into R and figure which table has your metro. Calculate the change in occupational employment and create a table of the five fastest growing and five most  declining occupations (be sure to drop occupations with less than 500 jobs in your metro).
+Next, navigate the [BLS tables link](https://www.bls.gov/oes/tables.htm) and download the 2012 Metropolitan and non-metropolitan table links. The "dl_" tables correspond to different MSAs. Bring them into R and figure which table has your metro. Calculate the change in occupational employment and create a table of the five fastest growing and five most  declining occupations (be sure to drop occupations with less than 500 jobs in your metro).
 
 ## Occupational Projections
 
 Navigate to your state's labor market information agency and search for their occupational projections. If your state produces projections at metro level, then find your metro and download those projections. If they do not have metro level projections, then use the state level. 
 
-Next navigate to the BLS employment section at [www.bls.gov/emp/](www.bls.gov/emp/), click the EP Data button and download the employment projections for 2016-2026 by major occupational group.
+Next navigate to the BLS employment section at [www.bls.gov/emp/](www.bls.gov/emp/), click the EP Data button and download the employment projections for 2018-2028 by major occupational group.
 
 Create a table depicting the regional and national projections for the major occupational groups. 
 
