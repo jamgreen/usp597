@@ -4,38 +4,19 @@ subtitle: "USP 597- Regional Economic Analysis"
 author: "Jamaal Green"
 institute: "Portland State University"
 date: "`r Sys.Date()`"
-output:
-  xaringan::moon_reader:
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+output: binb::metropolis
 ---
 
-background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fr4ds.had.co.nz%2F&psig=AOvVaw0dKggrbdFpjzaq6n31X2sX&ust=1588092739298000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLjt38-IiekCFQAAAAAdAAAAABAD)
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-```
-
-
-
-Image credit: [R for Data Science](r4ds.had.co.nz)
 
 ## What is this about?
 
 1. We are halfway through and we are quickly growing into competent R users and junion "data scientists" (to use the parlance of the day)
 
---
-
 2. As such, we should be focusing on not just learning R concepts (which is, of course vital), but in developing habits to write *better* R code. Remember, our code is useless if we can't understand what we're trying to do. 
-
---
 
 3. These are some brief slides on improving our *style* with R and discussing some things to be wary of in RStudio (remember, always be wary of defaults)
 
----
 
 ## Why does style matter?
 
@@ -43,7 +24,6 @@ An essential aspect of reproducability is legibility. Can _YOU_ understand what 
 
 An essential part of legibility is adhering to a set of principles or grammar of code. Keeping these following guidelines in mind will make your code more readable, and, in turn, more understandable.
 
----
 
 ## An Opinionated Guide
 
