@@ -1,15 +1,19 @@
 ---
 title: "USP 597-Regional Labor Market Anlysis 2, Census OnThe Map"
 author: "Jamaal Green"
-date: "May 5, 2019"
-output: 
+date:  "`r Sys.Date()`"
+output:
   beamer_presentation:
-    theme: "metropolis"
-    fonttheme: "structurebold"
+    fonttheme: structurebold
+    theme: metropolis
+  slidy_presentation: default
+  ioslides_presentation: default
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+options(tinytex.verbose = TRUE)
 ```
 
 ## Checking In
@@ -17,8 +21,8 @@ knitr::opts_chunk$set(echo = FALSE)
 1. Any big questions regarding the course thus far?
 2.  Next week is check in and preparing for our final projects. 
 3.  What should we prioritize over the rest of the term?
-  a.  Go deeper into microdata?
-  b.  Focus more on R itself (go over conditionals, iterators, additional packages)
+    a.  Go deeper into microdata?
+    b.  Focus more on R itself (go over conditionals, iterators, additional packages)
 4.  What remains unclear? Or what can I do better?
 
 # OnTheMap
@@ -29,12 +33,12 @@ knitr::opts_chunk$set(echo = FALSE)
 * Links data on where people work to data on where they live
 * Hybrid data based on combining survey and administrative data with some additional modeling estimation and "fuzzing"
 * Best Uses
-  - Identifying small-area workforce characteristics
-  - Mapping commuting patterns
+    + Identifying small-area workforce characteristics
+    + Mapping commuting patterns
   
 ## What is LEHD?
 
-![LEHD Structure](C:\\Users\\elmue\\Documents\\Teaching\\usp597_Spring2019\\lecture\\images\\lehd_structure.png)
+![LEHD Structure](images\lehd-structure.png)
 
 
 ##  Data Sources LEHD Origin-Destination Employment Statistics (LODES)
@@ -48,7 +52,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 * All states and DC have data available
 * Base geography- 2010 Census blocks
-  - allows you to sum upto different kinds of geographies (remember census geo-hierarchy)
+    + allows you to sum upto different kinds of geographies (remember census geo-hierarchy)
   
 ##  Time Frame
 
@@ -59,9 +63,9 @@ Check [LEHD Documentation](https://lehd.ces.census.gov/data/lodes/LODES7/LODESTe
 ##  Database Structure
 
 * Area Characteristic (AC)
-  - RAC: Residence Area Characteristic data, jobs are totaled by *home* census block
-  - WAC: Workplace Area Characteristic data, jobs are totaled by census block
-  - OD: Origin-Destination data, job totals associated with both a home Census block and work Census block
+    + RAC: Residence Area Characteristic data, jobs are totaled by *home* census block
+    + WAC: Workplace Area Characteristic data, jobs are totaled by census block
+    + OD: Origin-Destination data, job totals associated with both a home Census block and work Census block
   
   
 ##  Variables Available
@@ -73,28 +77,27 @@ Check [LEHD Documentation](https://lehd.ces.census.gov/data/lodes/LODES7/LODESTe
 ##  Variables Available cont.
 
 * Race/ethnicity and education
-  - 6 race groups
-  - Ethnicity, 2 categories
-  - Educ attainment for two age groups, 30-54 and 55+
-    - Less than HS, HS/equivalent, Assoc/some college, Bachelors or more
+    + 6 race groups
+    + Ethnicity, 2 categories
+    + Educ attainment for two age groups, 30-54 and 55+
+    + Less than HS, HS/equivalent, Assoc/some college, Bachelors or more
 * Sex
 
 ##  Variables Available cont.
 
 "Dominance": primary or non-primary
 
-- Primary jobs = job earned the individual the most money
-- The # of primary jobs = # workers
-
-Ownership: private or public (must calculate public employment)
-Firm age and firm size (only available 2011-newer for All Private Jobs)
+* Primary jobs = job earned the individual the most money
+* The # of primary jobs = # workers
+* Ownership: private or public (must calculate public employment)
+* Firm age and firm size (only available 2011-newer for All Private Jobs)
 
 ##  Coverage
 
 * Workers covered by UI system
-  - *does not* include self-employed
+    + *does not* include self+employed
 * Federal workers added only recently (2010-2015)
-  - means public employment figures are a bit questionable pre-2010
+    + means public employment figures are a bit questionable pre-2010
   
 # OnTheMap Tools
 
@@ -110,6 +113,7 @@ Firm age and firm size (only available 2011-newer for All Private Jobs)
 * Destination analyses
 * Distance/Direction Analysis
 * Inflow/Outflow
+
 
 # IPMUS- Entry to Census Microdata
 
@@ -137,12 +141,12 @@ Anthony Damico has a website: [Analyze Survey Data For Free](http://asdfree.com/
 
 ## What do I mean by complex?
 
-These surveys are *weighted*
-  - Have weights for individual observations to make representative of population
-  - Include replicate weights (a series of additional weights to measure variance correctly)
-ACS microdata is *hierarchical*
-  - contain *households* and *individual* weights
-  - Depending on the question you need to account for both household and individual characteristics
+* These surveys are *weighted*
+      + Have weights for individual observations to make representative of population
+      + Include replicate weights (a series of additional weights to measure variance correctly)
+* ACS microdata is *hierarchical*
+      + contain *households* and *individual* weights
+      + Depending on the question you need to account for both household and individual characteristics
 
 ## It's a lot...
 
